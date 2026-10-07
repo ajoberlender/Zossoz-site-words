@@ -1,0 +1,4169 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "API documentation for 53722_zossoz_sight_words",
+    "version": "1.0.0",
+    "description": "API documentation for 53722_zossoz_sight_words"
+  },
+  "servers": [
+    {
+      "url": "https://api.nocodebackend.com"
+    }
+  ],
+  "paths": {
+    "/create/children?Instance=53722_zossoz_sight_words": {
+      "post": {
+        "tags": [
+          "Endpoints"
+        ],
+        "summary": "Create a new record in children",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/Instance"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "name"
+                ],
+                "properties": {
+                  "name": {
+                    "type": "string"
+                  },
+                  "avatar": {
+                    "type": "string",
+                    "nullable": true
+                  },
+                  "birth_year": {
+                    "type": "integer",
+                    "nullable": true
+                  },
+                  "current_stage": {
+                    "type": "integer",
+                    "nullable": true
+                  },
+                  "tts_voice": {
+                    "type": "string",
+                    "nullable": true
+                  },
+                  "tts_rate": {
+                    "type": "number",
+                    "nullable": true
+                  },
+                  "daily_goal": {
+                    "type": "integer",
+                    "nullable": true
+                  },
+                  "streak_days": {
+                    "type": "integer",
+                    "nullable": true
+                  },
+                  "last_practice_date": {
+                    "type": "string",
+                    "format": "date",
+                    "nullable": true
+                  },
+                  "stars": {
+                    "type": "integer",
+                    "nullable": true
+                  },
+                  "user_id": {
+                    "type": "string",
+                    "nullable": true
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Successfully created the record",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "example": "success"
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Record created successfully"
+                    },
+                    "id": {
+                      "type": "integer",
+                      "description": "ID of the newly created record"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        }
+      }
+    },
+    "/read/children?Instance=53722_zossoz_sight_words": {
+      "get": {
+        "tags": [
+          "Endpoints"
+        ],
+        "summary": "Retrieve all records from children",
+        "description": "### Filtering\n\nYou can filter results by adding column-based query parameters directly to the URL.\nOperators use bracket notation:\n\n| Operator | Example | Meaning |\n|---|---|---|\n| `field=value` | `?status=active` | Equal (default) |\n| `field[ne]=value` | `?status[ne]=inactive` | Not equal |\n| `field[gt]=value` | `?price[gt]=100` | Greater than |\n| `field[gte]=value` | `?date[gte]=2024-05-01` | Greater than or equal |\n| `field[lt]=value` | `?score[lt]=500` | Less than |\n| `field[lte]=value` | `?score[lte]=800` | Less than or equal |\n| `field[in]=value` | `?type[in]=a,b,c` | In list (comma-separated) |\n| `field[like]=value` | `?name[like]=john` | Partial match |\n\n**Available columns:** `name`, `avatar`, `birth_year`, `current_stage`, `tts_voice`, `tts_rate`, `daily_goal`, `streak_days`, `last_practice_date`, `stars`, `user_id`\n\n**Example:**\n```\n?Instance={db_name}&status=active&price[gte]=100&price[lte]=500&sort=price&order=desc&page=1&limit=20\n```",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/Instance"
+          },
+          {
+            "in": "query",
+            "name": "queryParams",
+            "required": false,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Filters, pagination & sorting as key=value pairs separated by &. Example: status=active&page=2&limit=5&sort=name&order=asc. Available columns: name, avatar, birth_year, current_stage, tts_voice, tts_rate, daily_goal, streak_days, last_practice_date, stars, user_id"
+          }
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully retrieved records",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string"
+                    },
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "name": {
+                            "type": "string"
+                          },
+                          "avatar": {
+                            "type": "string",
+                            "nullable": true
+                          },
+                          "birth_year": {
+                            "type": "integer",
+                            "nullable": true
+                          },
+                          "current_stage": {
+                            "type": "integer",
+                            "nullable": true
+                          },
+                          "tts_voice": {
+                            "type": "string",
+                            "nullable": true
+                          },
+                          "tts_rate": {
+                            "type": "number",
+                            "nullable": true
+                          },
+                          "daily_goal": {
+                            "type": "integer",
+                            "nullable": true
+                          },
+                          "streak_days": {
+                            "type": "integer",
+                            "nullable": true
+                          },
+                          "last_practice_date": {
+                            "type": "string",
+                            "format": "date",
+                            "nullable": true
+                          },
+                          "stars": {
+                            "type": "integer",
+                            "nullable": true
+                          },
+                          "user_id": {
+                            "type": "string",
+                            "nullable": true
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        }
+      }
+    },
+    "/read/children/{id}?Instance=53722_zossoz_sight_words": {
+      "get": {
+        "tags": [
+          "Endpoints"
+        ],
+        "summary": "Retrieve a record by ID from children",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/Instance"
+          },
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            },
+            "description": "The ID of the record to retrieve"
+          }
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully retrieved the record",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string"
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "name": {
+                          "type": "string"
+                        },
+                        "avatar": {
+                          "type": "string",
+                          "nullable": true
+                        },
+                        "birth_year": {
+                          "type": "integer",
+                          "nullable": true
+                        },
+                        "current_stage": {
+                          "type": "integer",
+                          "nullable": true
+                        },
+                        "tts_voice": {
+                          "type": "string",
+                          "nullable": true
+                        },
+                        "tts_rate": {
+                          "type": "number",
+                          "nullable": true
+                        },
+                        "daily_goal": {
+                          "type": "integer",
+                          "nullable": true
+                        },
+                        "streak_days": {
+                          "type": "integer",
+                          "nullable": true
+                        },
+                        "last_practice_date": {
+                          "type": "string",
+                          "format": "date",
+                          "nullable": true
+                        },
+                        "stars": {
+                          "type": "integer",
+                          "nullable": true
+                        },
+                        "user_id": {
+                          "type": "string",
+                          "nullable": true
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "404": {
+            "description": "Record Not Found"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        }
+      }
+    },
+    "/search/children?Instance=53722_zossoz_sight_words": {
+      "post": {
+        "tags": [
+          "Endpoints"
+        ],
+        "summary": "Search for records in children",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/Instance"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string"
+                  },
+                  "avatar": {
+                    "type": "string",
+                    "nullable": true
+                  },
+                  "birth_year": {
+                    "type": "integer",
+                    "nullable": true
+                  },
+                  "current_stage": {
+                    "type": "integer",
+                    "nullable": true
+                  },
+                  "tts_voice": {
+                    "type": "string",
+                    "nullable": true
+                  },
+                  "tts_rate": {
+                    "type": "number",
+                    "nullable": true
+                  },
+                  "daily_goal": {
+                    "type": "integer",
+                    "nullable": true
+                  },
+                  "streak_days": {
+                    "type": "integer",
+                    "nullable": true
+                  },
+                  "last_practice_date": {
+                    "type": "string",
+                    "format": "date",
+                    "nullable": true
+                  },
+                  "stars": {
+                    "type": "integer",
+                    "nullable": true
+                  },
+                  "user_id": {
+                    "type": "string",
+                    "nullable": true
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully retrieved matching records",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string"
+                    },
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "name": {
+                            "type": "string"
+                          },
+                          "avatar": {
+                            "type": "string",
+                            "nullable": true
+                          },
+                          "birth_year": {
+                            "type": "integer",
+                            "nullable": true
+                          },
+                          "current_stage": {
+                            "type": "integer",
+                            "nullable": true
+                          },
+                          "tts_voice": {
+                            "type": "string",
+                            "nullable": true
+                          },
+                          "tts_rate": {
+                            "type": "number",
+                            "nullable": true
+                          },
+                          "daily_goal": {
+                            "type": "integer",
+                            "nullable": true
+                          },
+                          "streak_days": {
+                            "type": "integer",
+                            "nullable": true
+                          },
+                          "last_practice_date": {
+                            "type": "string",
+                            "format": "date",
+                            "nullable": true
+                          },
+                          "stars": {
+                            "type": "integer",
+                            "nullable": true
+                          },
+                          "user_id": {
+                            "type": "string",
+                            "nullable": true
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        }
+      }
+    },
+    "/update/children/{id}?Instance=53722_zossoz_sight_words": {
+      "put": {
+        "tags": [
+          "Endpoints"
+        ],
+        "summary": "Update a record in children",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/Instance"
+          },
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            },
+            "description": "The ID of the record to update"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string"
+                  },
+                  "avatar": {
+                    "type": "string",
+                    "nullable": true
+                  },
+                  "birth_year": {
+                    "type": "integer",
+                    "nullable": true
+                  },
+                  "current_stage": {
+                    "type": "integer",
+                    "nullable": true
+                  },
+                  "tts_voice": {
+                    "type": "string",
+                    "nullable": true
+                  },
+                  "tts_rate": {
+                    "type": "number",
+                    "nullable": true
+                  },
+                  "daily_goal": {
+                    "type": "integer",
+                    "nullable": true
+                  },
+                  "streak_days": {
+                    "type": "integer",
+                    "nullable": true
+                  },
+                  "last_practice_date": {
+                    "type": "string",
+                    "format": "date",
+                    "nullable": true
+                  },
+                  "stars": {
+                    "type": "integer",
+                    "nullable": true
+                  },
+                  "user_id": {
+                    "type": "string",
+                    "nullable": true
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully updated the record"
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        }
+      }
+    },
+    "/delete/children/{id}?Instance=53722_zossoz_sight_words": {
+      "delete": {
+        "tags": [
+          "Endpoints"
+        ],
+        "summary": "Delete a record from children",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/Instance"
+          },
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            },
+            "description": "The ID of the record to delete"
+          }
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully deleted the record"
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "404": {
+            "description": "Record Not Found"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        }
+      }
+    },
+    "/bulk/create/children?Instance=53722_zossoz_sight_words": {
+      "post": {
+        "tags": [
+          "Bulk Endpoints"
+        ],
+        "summary": "Bulk create records in children (Max 500)",
+        "description": "### Bulk Create Guide\nInsert multiple records into the database with a single API call.\n\n- **Max Limit**: 500 records per request.\n- **Performance**: Highly recommended over looping single POST requests.\n\n**Response**: Returns an HTTP 207 Multi-Status with a summary and a per-record breakdown of successes and failures.",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/Instance"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "records": {
+                    "type": "array",
+                    "description": "An array of objects to insert",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "name": {
+                          "type": "string"
+                        },
+                        "avatar": {
+                          "type": "string",
+                          "nullable": true
+                        },
+                        "birth_year": {
+                          "type": "integer",
+                          "nullable": true
+                        },
+                        "current_stage": {
+                          "type": "integer",
+                          "nullable": true
+                        },
+                        "tts_voice": {
+                          "type": "string",
+                          "nullable": true
+                        },
+                        "tts_rate": {
+                          "type": "number",
+                          "nullable": true
+                        },
+                        "daily_goal": {
+                          "type": "integer",
+                          "nullable": true
+                        },
+                        "streak_days": {
+                          "type": "integer",
+                          "nullable": true
+                        },
+                        "last_practice_date": {
+                          "type": "string",
+                          "format": "date",
+                          "nullable": true
+                        },
+                        "stars": {
+                          "type": "integer",
+                          "nullable": true
+                        },
+                        "user_id": {
+                          "type": "string",
+                          "nullable": true
+                        }
+                      }
+                    }
+                  }
+                }
+              },
+              "example": {
+                "records": [
+                  {
+                    "name": "string",
+                    "avatar": "string",
+                    "birth_year": 0,
+                    "current_stage": 0,
+                    "tts_voice": "string",
+                    "tts_rate": 0,
+                    "daily_goal": 0,
+                    "streak_days": 0,
+                    "last_practice_date": "2026-05-30",
+                    "stars": 0,
+                    "user_id": "string"
+                  },
+                  {
+                    "name": "string",
+                    "avatar": "string",
+                    "birth_year": 0,
+                    "current_stage": 0,
+                    "tts_voice": "string",
+                    "tts_rate": 0,
+                    "daily_goal": 0,
+                    "streak_days": 0,
+                    "last_practice_date": "2026-05-30",
+                    "stars": 0,
+                    "user_id": "string"
+                  }
+                ]
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "207": {
+            "description": "Multi-Status response indicating success/failure per record"
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        }
+      }
+    },
+    "/bulk/update/children?Instance=53722_zossoz_sight_words": {
+      "put": {
+        "tags": [
+          "Bulk Endpoints"
+        ],
+        "summary": "Bulk update records in children (Max 500)",
+        "description": "### Bulk Update Guide\nUpdate multiple existing records simultaneously using a single transaction.\n\n- **Requirement**: Every object in the `records` array MUST include the primary key (`id`).\n- **Max Limit**: 500 records per request.\n- **Atomic**: Wraps updates in a transaction (all-or-nothing per database rules).",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/Instance"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "records": {
+                    "type": "array",
+                    "description": "An array of objects to update. Must include the primary key.",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "name": {
+                          "type": "string"
+                        },
+                        "avatar": {
+                          "type": "string",
+                          "nullable": true
+                        },
+                        "birth_year": {
+                          "type": "integer",
+                          "nullable": true
+                        },
+                        "current_stage": {
+                          "type": "integer",
+                          "nullable": true
+                        },
+                        "tts_voice": {
+                          "type": "string",
+                          "nullable": true
+                        },
+                        "tts_rate": {
+                          "type": "number",
+                          "nullable": true
+                        },
+                        "daily_goal": {
+                          "type": "integer",
+                          "nullable": true
+                        },
+                        "streak_days": {
+                          "type": "integer",
+                          "nullable": true
+                        },
+                        "last_practice_date": {
+                          "type": "string",
+                          "format": "date",
+                          "nullable": true
+                        },
+                        "stars": {
+                          "type": "integer",
+                          "nullable": true
+                        },
+                        "user_id": {
+                          "type": "string",
+                          "nullable": true
+                        }
+                      }
+                    }
+                  }
+                }
+              },
+              "example": {
+                "records": [
+                  {
+                    "id": 0,
+                    "name": "string",
+                    "avatar": "string",
+                    "birth_year": 0,
+                    "current_stage": 0,
+                    "tts_voice": "string",
+                    "tts_rate": 0,
+                    "daily_goal": 0,
+                    "streak_days": 0,
+                    "last_practice_date": "2026-05-30",
+                    "stars": 0,
+                    "user_id": "string"
+                  },
+                  {
+                    "id": 0,
+                    "name": "string",
+                    "avatar": "string",
+                    "birth_year": 0,
+                    "current_stage": 0,
+                    "tts_voice": "string",
+                    "tts_rate": 0,
+                    "daily_goal": 0,
+                    "streak_days": 0,
+                    "last_practice_date": "2026-05-30",
+                    "stars": 0,
+                    "user_id": "string"
+                  }
+                ]
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "207": {
+            "description": "Multi-Status response indicating success/failure per record"
+          },
+          "400": {
+            "description": "Bad Request (e.g. missing primary key)"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        }
+      }
+    },
+    "/bulk/delete/children?Instance=53722_zossoz_sight_words": {
+      "delete": {
+        "tags": [
+          "Bulk Endpoints"
+        ],
+        "summary": "Bulk delete records from children (Max 500)",
+        "description": "### Bulk Delete Guide\nDelete multiple records by providing the IDs of all the records you want to delete.\n\n- **Max Limit**: 500 IDs per request.",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/Instance"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "ids": {
+                    "type": "array",
+                    "description": "An array of primary keys to delete",
+                    "items": {
+                      "type": "integer"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully processed bulk delete"
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        }
+      }
+    },
+    "/create/custom_words?Instance=53722_zossoz_sight_words": {
+      "post": {
+        "tags": [
+          "Endpoints"
+        ],
+        "summary": "Create a new record in custom_words",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/Instance"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "word"
+                ],
+                "properties": {
+                  "child_id": {
+                    "type": "integer",
+                    "nullable": true
+                  },
+                  "word": {
+                    "type": "string"
+                  },
+                  "sentence": {
+                    "type": "string",
+                    "nullable": true
+                  },
+                  "note": {
+                    "type": "string",
+                    "nullable": true
+                  },
+                  "user_id": {
+                    "type": "string",
+                    "nullable": true
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Successfully created the record",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "example": "success"
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Record created successfully"
+                    },
+                    "id": {
+                      "type": "integer",
+                      "description": "ID of the newly created record"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        }
+      }
+    },
+    "/read/custom_words?Instance=53722_zossoz_sight_words": {
+      "get": {
+        "tags": [
+          "Endpoints"
+        ],
+        "summary": "Retrieve all records from custom_words",
+        "description": "### Filtering\n\nYou can filter results by adding column-based query parameters directly to the URL.\nOperators use bracket notation:\n\n| Operator | Example | Meaning |\n|---|---|---|\n| `field=value` | `?status=active` | Equal (default) |\n| `field[ne]=value` | `?status[ne]=inactive` | Not equal |\n| `field[gt]=value` | `?price[gt]=100` | Greater than |\n| `field[gte]=value` | `?date[gte]=2024-05-01` | Greater than or equal |\n| `field[lt]=value` | `?score[lt]=500` | Less than |\n| `field[lte]=value` | `?score[lte]=800` | Less than or equal |\n| `field[in]=value` | `?type[in]=a,b,c` | In list (comma-separated) |\n| `field[like]=value` | `?name[like]=john` | Partial match |\n\n**Available columns:** `child_id`, `word`, `sentence`, `note`, `user_id`\n\n**Example:**\n```\n?Instance={db_name}&status=active&price[gte]=100&price[lte]=500&sort=price&order=desc&page=1&limit=20\n```",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/Instance"
+          },
+          {
+            "in": "query",
+            "name": "queryParams",
+            "required": false,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Filters, pagination & sorting as key=value pairs separated by &. Example: status=active&page=2&limit=5&sort=name&order=asc. Available columns: child_id, word, sentence, note, user_id"
+          }
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully retrieved records",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string"
+                    },
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "child_id": {
+                            "type": "integer",
+                            "nullable": true
+                          },
+                          "word": {
+                            "type": "string"
+                          },
+                          "sentence": {
+                            "type": "string",
+                            "nullable": true
+                          },
+                          "note": {
+                            "type": "string",
+                            "nullable": true
+                          },
+                          "user_id": {
+                            "type": "string",
+                            "nullable": true
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        }
+      }
+    },
+    "/read/custom_words/{id}?Instance=53722_zossoz_sight_words": {
+      "get": {
+        "tags": [
+          "Endpoints"
+        ],
+        "summary": "Retrieve a record by ID from custom_words",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/Instance"
+          },
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            },
+            "description": "The ID of the record to retrieve"
+          }
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully retrieved the record",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string"
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "child_id": {
+                          "type": "integer",
+                          "nullable": true
+                        },
+                        "word": {
+                          "type": "string"
+                        },
+                        "sentence": {
+                          "type": "string",
+                          "nullable": true
+                        },
+                        "note": {
+                          "type": "string",
+                          "nullable": true
+                        },
+                        "user_id": {
+                          "type": "string",
+                          "nullable": true
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "404": {
+            "description": "Record Not Found"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        }
+      }
+    },
+    "/search/custom_words?Instance=53722_zossoz_sight_words": {
+      "post": {
+        "tags": [
+          "Endpoints"
+        ],
+        "summary": "Search for records in custom_words",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/Instance"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "child_id": {
+                    "type": "integer",
+                    "nullable": true
+                  },
+                  "word": {
+                    "type": "string"
+                  },
+                  "sentence": {
+                    "type": "string",
+                    "nullable": true
+                  },
+                  "note": {
+                    "type": "string",
+                    "nullable": true
+                  },
+                  "user_id": {
+                    "type": "string",
+                    "nullable": true
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully retrieved matching records",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string"
+                    },
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "child_id": {
+                            "type": "integer",
+                            "nullable": true
+                          },
+                          "word": {
+                            "type": "string"
+                          },
+                          "sentence": {
+                            "type": "string",
+                            "nullable": true
+                          },
+                          "note": {
+                            "type": "string",
+                            "nullable": true
+                          },
+                          "user_id": {
+                            "type": "string",
+                            "nullable": true
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        }
+      }
+    },
+    "/update/custom_words/{id}?Instance=53722_zossoz_sight_words": {
+      "put": {
+        "tags": [
+          "Endpoints"
+        ],
+        "summary": "Update a record in custom_words",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/Instance"
+          },
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            },
+            "description": "The ID of the record to update"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "child_id": {
+                    "type": "integer",
+                    "nullable": true
+                  },
+                  "word": {
+                    "type": "string"
+                  },
+                  "sentence": {
+                    "type": "string",
+                    "nullable": true
+                  },
+                  "note": {
+                    "type": "string",
+                    "nullable": true
+                  },
+                  "user_id": {
+                    "type": "string",
+                    "nullable": true
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully updated the record"
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        }
+      }
+    },
+    "/delete/custom_words/{id}?Instance=53722_zossoz_sight_words": {
+      "delete": {
+        "tags": [
+          "Endpoints"
+        ],
+        "summary": "Delete a record from custom_words",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/Instance"
+          },
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            },
+            "description": "The ID of the record to delete"
+          }
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully deleted the record"
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "404": {
+            "description": "Record Not Found"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        }
+      }
+    },
+    "/bulk/create/custom_words?Instance=53722_zossoz_sight_words": {
+      "post": {
+        "tags": [
+          "Bulk Endpoints"
+        ],
+        "summary": "Bulk create records in custom_words (Max 500)",
+        "description": "### Bulk Create Guide\nInsert multiple records into the database with a single API call.\n\n- **Max Limit**: 500 records per request.\n- **Performance**: Highly recommended over looping single POST requests.\n\n**Response**: Returns an HTTP 207 Multi-Status with a summary and a per-record breakdown of successes and failures.",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/Instance"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "records": {
+                    "type": "array",
+                    "description": "An array of objects to insert",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "child_id": {
+                          "type": "integer",
+                          "nullable": true
+                        },
+                        "word": {
+                          "type": "string"
+                        },
+                        "sentence": {
+                          "type": "string",
+                          "nullable": true
+                        },
+                        "note": {
+                          "type": "string",
+                          "nullable": true
+                        },
+                        "user_id": {
+                          "type": "string",
+                          "nullable": true
+                        }
+                      }
+                    }
+                  }
+                }
+              },
+              "example": {
+                "records": [
+                  {
+                    "child_id": 0,
+                    "word": "string",
+                    "sentence": "string",
+                    "note": "string",
+                    "user_id": "string"
+                  },
+                  {
+                    "child_id": 0,
+                    "word": "string",
+                    "sentence": "string",
+                    "note": "string",
+                    "user_id": "string"
+                  }
+                ]
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "207": {
+            "description": "Multi-Status response indicating success/failure per record"
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        }
+      }
+    },
+    "/bulk/update/custom_words?Instance=53722_zossoz_sight_words": {
+      "put": {
+        "tags": [
+          "Bulk Endpoints"
+        ],
+        "summary": "Bulk update records in custom_words (Max 500)",
+        "description": "### Bulk Update Guide\nUpdate multiple existing records simultaneously using a single transaction.\n\n- **Requirement**: Every object in the `records` array MUST include the primary key (`id`).\n- **Max Limit**: 500 records per request.\n- **Atomic**: Wraps updates in a transaction (all-or-nothing per database rules).",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/Instance"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "records": {
+                    "type": "array",
+                    "description": "An array of objects to update. Must include the primary key.",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "child_id": {
+                          "type": "integer",
+                          "nullable": true
+                        },
+                        "word": {
+                          "type": "string"
+                        },
+                        "sentence": {
+                          "type": "string",
+                          "nullable": true
+                        },
+                        "note": {
+                          "type": "string",
+                          "nullable": true
+                        },
+                        "user_id": {
+                          "type": "string",
+                          "nullable": true
+                        }
+                      }
+                    }
+                  }
+                }
+              },
+              "example": {
+                "records": [
+                  {
+                    "id": 0,
+                    "child_id": 0,
+                    "word": "string",
+                    "sentence": "string",
+                    "note": "string",
+                    "user_id": "string"
+                  },
+                  {
+                    "id": 0,
+                    "child_id": 0,
+                    "word": "string",
+                    "sentence": "string",
+                    "note": "string",
+                    "user_id": "string"
+                  }
+                ]
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "207": {
+            "description": "Multi-Status response indicating success/failure per record"
+          },
+          "400": {
+            "description": "Bad Request (e.g. missing primary key)"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        }
+      }
+    },
+    "/bulk/delete/custom_words?Instance=53722_zossoz_sight_words": {
+      "delete": {
+        "tags": [
+          "Bulk Endpoints"
+        ],
+        "summary": "Bulk delete records from custom_words (Max 500)",
+        "description": "### Bulk Delete Guide\nDelete multiple records by providing the IDs of all the records you want to delete.\n\n- **Max Limit**: 500 IDs per request.",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/Instance"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "ids": {
+                    "type": "array",
+                    "description": "An array of primary keys to delete",
+                    "items": {
+                      "type": "integer"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully processed bulk delete"
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        }
+      }
+    },
+    "/create/item_progress?Instance=53722_zossoz_sight_words": {
+      "post": {
+        "tags": [
+          "Endpoints"
+        ],
+        "summary": "Create a new record in item_progress",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/Instance"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "child_id",
+                  "item_key"
+                ],
+                "properties": {
+                  "child_id": {
+                    "type": "integer"
+                  },
+                  "item_key": {
+                    "type": "string"
+                  },
+                  "item_type": {
+                    "type": "string",
+                    "enum": [
+                      "letter",
+                      "digraph",
+                      "phonics_word",
+                      "sight_word",
+                      "sentence",
+                      "passage"
+                    ],
+                    "description": "dropdown: choose one of [letter, digraph, phonics_word, sight_word, sentence, passage]",
+                    "nullable": true
+                  },
+                  "stage": {
+                    "type": "integer",
+                    "nullable": true
+                  },
+                  "ease": {
+                    "type": "number",
+                    "nullable": true
+                  },
+                  "interval_days": {
+                    "type": "number",
+                    "nullable": true
+                  },
+                  "repetitions": {
+                    "type": "integer",
+                    "nullable": true
+                  },
+                  "lapses": {
+                    "type": "integer",
+                    "nullable": true
+                  },
+                  "due_at": {
+                    "type": "string",
+                    "format": "date-time",
+                    "example": "2026-01-01 00:00:00",
+                    "nullable": true
+                  },
+                  "last_reviewed_at": {
+                    "type": "string",
+                    "format": "date-time",
+                    "example": "2026-01-01 00:00:00",
+                    "nullable": true
+                  },
+                  "mastered": {
+                    "type": "integer",
+                    "nullable": true
+                  },
+                  "user_id": {
+                    "type": "string",
+                    "nullable": true
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Successfully created the record",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "example": "success"
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Record created successfully"
+                    },
+                    "id": {
+                      "type": "integer",
+                      "description": "ID of the newly created record"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        }
+      }
+    },
+    "/read/item_progress?Instance=53722_zossoz_sight_words": {
+      "get": {
+        "tags": [
+          "Endpoints"
+        ],
+        "summary": "Retrieve all records from item_progress",
+        "description": "### Filtering\n\nYou can filter results by adding column-based query parameters directly to the URL.\nOperators use bracket notation:\n\n| Operator | Example | Meaning |\n|---|---|---|\n| `field=value` | `?status=active` | Equal (default) |\n| `field[ne]=value` | `?status[ne]=inactive` | Not equal |\n| `field[gt]=value` | `?price[gt]=100` | Greater than |\n| `field[gte]=value` | `?date[gte]=2024-05-01` | Greater than or equal |\n| `field[lt]=value` | `?score[lt]=500` | Less than |\n| `field[lte]=value` | `?score[lte]=800` | Less than or equal |\n| `field[in]=value` | `?type[in]=a,b,c` | In list (comma-separated) |\n| `field[like]=value` | `?name[like]=john` | Partial match |\n\n**Available columns:** `child_id`, `item_key`, `item_type`, `stage`, `ease`, `interval_days`, `repetitions`, `lapses`, `due_at`, `last_reviewed_at`, `mastered`, `user_id`\n\n**Example:**\n```\n?Instance={db_name}&status=active&price[gte]=100&price[lte]=500&sort=price&order=desc&page=1&limit=20\n```",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/Instance"
+          },
+          {
+            "in": "query",
+            "name": "queryParams",
+            "required": false,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Filters, pagination & sorting as key=value pairs separated by &. Example: status=active&page=2&limit=5&sort=name&order=asc. Available columns: child_id, item_key, item_type, stage, ease, interval_days, repetitions, lapses, due_at, last_reviewed_at, mastered, user_id"
+          }
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully retrieved records",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string"
+                    },
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "child_id": {
+                            "type": "integer"
+                          },
+                          "item_key": {
+                            "type": "string"
+                          },
+                          "item_type": {
+                            "type": "string",
+                            "enum": [
+                              "letter",
+                              "digraph",
+                              "phonics_word",
+                              "sight_word",
+                              "sentence",
+                              "passage"
+                            ],
+                            "description": "dropdown: choose one of [letter, digraph, phonics_word, sight_word, sentence, passage]",
+                            "nullable": true
+                          },
+                          "stage": {
+                            "type": "integer",
+                            "nullable": true
+                          },
+                          "ease": {
+                            "type": "number",
+                            "nullable": true
+                          },
+                          "interval_days": {
+                            "type": "number",
+                            "nullable": true
+                          },
+                          "repetitions": {
+                            "type": "integer",
+                            "nullable": true
+                          },
+                          "lapses": {
+                            "type": "integer",
+                            "nullable": true
+                          },
+                          "due_at": {
+                            "type": "string",
+                            "format": "date-time",
+                            "example": "2026-01-01 00:00:00",
+                            "nullable": true
+                          },
+                          "last_reviewed_at": {
+                            "type": "string",
+                            "format": "date-time",
+                            "example": "2026-01-01 00:00:00",
+                            "nullable": true
+                          },
+                          "mastered": {
+                            "type": "integer",
+                            "nullable": true
+                          },
+                          "user_id": {
+                            "type": "string",
+                            "nullable": true
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        }
+      }
+    },
+    "/read/item_progress/{id}?Instance=53722_zossoz_sight_words": {
+      "get": {
+        "tags": [
+          "Endpoints"
+        ],
+        "summary": "Retrieve a record by ID from item_progress",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/Instance"
+          },
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            },
+            "description": "The ID of the record to retrieve"
+          }
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully retrieved the record",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string"
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "child_id": {
+                          "type": "integer"
+                        },
+                        "item_key": {
+                          "type": "string"
+                        },
+                        "item_type": {
+                          "type": "string",
+                          "enum": [
+                            "letter",
+                            "digraph",
+                            "phonics_word",
+                            "sight_word",
+                            "sentence",
+                            "passage"
+                          ],
+                          "description": "dropdown: choose one of [letter, digraph, phonics_word, sight_word, sentence, passage]",
+                          "nullable": true
+                        },
+                        "stage": {
+                          "type": "integer",
+                          "nullable": true
+                        },
+                        "ease": {
+                          "type": "number",
+                          "nullable": true
+                        },
+                        "interval_days": {
+                          "type": "number",
+                          "nullable": true
+                        },
+                        "repetitions": {
+                          "type": "integer",
+                          "nullable": true
+                        },
+                        "lapses": {
+                          "type": "integer",
+                          "nullable": true
+                        },
+                        "due_at": {
+                          "type": "string",
+                          "format": "date-time",
+                          "example": "2026-01-01 00:00:00",
+                          "nullable": true
+                        },
+                        "last_reviewed_at": {
+                          "type": "string",
+                          "format": "date-time",
+                          "example": "2026-01-01 00:00:00",
+                          "nullable": true
+                        },
+                        "mastered": {
+                          "type": "integer",
+                          "nullable": true
+                        },
+                        "user_id": {
+                          "type": "string",
+                          "nullable": true
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "404": {
+            "description": "Record Not Found"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        }
+      }
+    },
+    "/search/item_progress?Instance=53722_zossoz_sight_words": {
+      "post": {
+        "tags": [
+          "Endpoints"
+        ],
+        "summary": "Search for records in item_progress",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/Instance"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "child_id": {
+                    "type": "integer"
+                  },
+                  "item_key": {
+                    "type": "string"
+                  },
+                  "item_type": {
+                    "type": "string",
+                    "enum": [
+                      "letter",
+                      "digraph",
+                      "phonics_word",
+                      "sight_word",
+                      "sentence",
+                      "passage"
+                    ],
+                    "description": "dropdown: choose one of [letter, digraph, phonics_word, sight_word, sentence, passage]",
+                    "nullable": true
+                  },
+                  "stage": {
+                    "type": "integer",
+                    "nullable": true
+                  },
+                  "ease": {
+                    "type": "number",
+                    "nullable": true
+                  },
+                  "interval_days": {
+                    "type": "number",
+                    "nullable": true
+                  },
+                  "repetitions": {
+                    "type": "integer",
+                    "nullable": true
+                  },
+                  "lapses": {
+                    "type": "integer",
+                    "nullable": true
+                  },
+                  "due_at": {
+                    "type": "string",
+                    "format": "date-time",
+                    "example": "2026-01-01 00:00:00",
+                    "nullable": true
+                  },
+                  "last_reviewed_at": {
+                    "type": "string",
+                    "format": "date-time",
+                    "example": "2026-01-01 00:00:00",
+                    "nullable": true
+                  },
+                  "mastered": {
+                    "type": "integer",
+                    "nullable": true
+                  },
+                  "user_id": {
+                    "type": "string",
+                    "nullable": true
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully retrieved matching records",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string"
+                    },
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "child_id": {
+                            "type": "integer"
+                          },
+                          "item_key": {
+                            "type": "string"
+                          },
+                          "item_type": {
+                            "type": "string",
+                            "enum": [
+                              "letter",
+                              "digraph",
+                              "phonics_word",
+                              "sight_word",
+                              "sentence",
+                              "passage"
+                            ],
+                            "description": "dropdown: choose one of [letter, digraph, phonics_word, sight_word, sentence, passage]",
+                            "nullable": true
+                          },
+                          "stage": {
+                            "type": "integer",
+                            "nullable": true
+                          },
+                          "ease": {
+                            "type": "number",
+                            "nullable": true
+                          },
+                          "interval_days": {
+                            "type": "number",
+                            "nullable": true
+                          },
+                          "repetitions": {
+                            "type": "integer",
+                            "nullable": true
+                          },
+                          "lapses": {
+                            "type": "integer",
+                            "nullable": true
+                          },
+                          "due_at": {
+                            "type": "string",
+                            "format": "date-time",
+                            "example": "2026-01-01 00:00:00",
+                            "nullable": true
+                          },
+                          "last_reviewed_at": {
+                            "type": "string",
+                            "format": "date-time",
+                            "example": "2026-01-01 00:00:00",
+                            "nullable": true
+                          },
+                          "mastered": {
+                            "type": "integer",
+                            "nullable": true
+                          },
+                          "user_id": {
+                            "type": "string",
+                            "nullable": true
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        }
+      }
+    },
+    "/update/item_progress/{id}?Instance=53722_zossoz_sight_words": {
+      "put": {
+        "tags": [
+          "Endpoints"
+        ],
+        "summary": "Update a record in item_progress",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/Instance"
+          },
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            },
+            "description": "The ID of the record to update"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "child_id": {
+                    "type": "integer"
+                  },
+                  "item_key": {
+                    "type": "string"
+                  },
+                  "item_type": {
+                    "type": "string",
+                    "enum": [
+                      "letter",
+                      "digraph",
+                      "phonics_word",
+                      "sight_word",
+                      "sentence",
+                      "passage"
+                    ],
+                    "description": "dropdown: choose one of [letter, digraph, phonics_word, sight_word, sentence, passage]",
+                    "nullable": true
+                  },
+                  "stage": {
+                    "type": "integer",
+                    "nullable": true
+                  },
+                  "ease": {
+                    "type": "number",
+                    "nullable": true
+                  },
+                  "interval_days": {
+                    "type": "number",
+                    "nullable": true
+                  },
+                  "repetitions": {
+                    "type": "integer",
+                    "nullable": true
+                  },
+                  "lapses": {
+                    "type": "integer",
+                    "nullable": true
+                  },
+                  "due_at": {
+                    "type": "string",
+                    "format": "date-time",
+                    "example": "2026-01-01 00:00:00",
+                    "nullable": true
+                  },
+                  "last_reviewed_at": {
+                    "type": "string",
+                    "format": "date-time",
+                    "example": "2026-01-01 00:00:00",
+                    "nullable": true
+                  },
+                  "mastered": {
+                    "type": "integer",
+                    "nullable": true
+                  },
+                  "user_id": {
+                    "type": "string",
+                    "nullable": true
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully updated the record"
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        }
+      }
+    },
+    "/delete/item_progress/{id}?Instance=53722_zossoz_sight_words": {
+      "delete": {
+        "tags": [
+          "Endpoints"
+        ],
+        "summary": "Delete a record from item_progress",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/Instance"
+          },
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            },
+            "description": "The ID of the record to delete"
+          }
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully deleted the record"
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "404": {
+            "description": "Record Not Found"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        }
+      }
+    },
+    "/bulk/create/item_progress?Instance=53722_zossoz_sight_words": {
+      "post": {
+        "tags": [
+          "Bulk Endpoints"
+        ],
+        "summary": "Bulk create records in item_progress (Max 500)",
+        "description": "### Bulk Create Guide\nInsert multiple records into the database with a single API call.\n\n- **Max Limit**: 500 records per request.\n- **Performance**: Highly recommended over looping single POST requests.\n\n**Response**: Returns an HTTP 207 Multi-Status with a summary and a per-record breakdown of successes and failures.",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/Instance"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "records": {
+                    "type": "array",
+                    "description": "An array of objects to insert",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "child_id": {
+                          "type": "integer"
+                        },
+                        "item_key": {
+                          "type": "string"
+                        },
+                        "item_type": {
+                          "type": "string",
+                          "enum": [
+                            "letter",
+                            "digraph",
+                            "phonics_word",
+                            "sight_word",
+                            "sentence",
+                            "passage"
+                          ],
+                          "description": "dropdown: choose one of [letter, digraph, phonics_word, sight_word, sentence, passage]",
+                          "nullable": true
+                        },
+                        "stage": {
+                          "type": "integer",
+                          "nullable": true
+                        },
+                        "ease": {
+                          "type": "number",
+                          "nullable": true
+                        },
+                        "interval_days": {
+                          "type": "number",
+                          "nullable": true
+                        },
+                        "repetitions": {
+                          "type": "integer",
+                          "nullable": true
+                        },
+                        "lapses": {
+                          "type": "integer",
+                          "nullable": true
+                        },
+                        "due_at": {
+                          "type": "string",
+                          "format": "date-time",
+                          "example": "2026-01-01 00:00:00",
+                          "nullable": true
+                        },
+                        "last_reviewed_at": {
+                          "type": "string",
+                          "format": "date-time",
+                          "example": "2026-01-01 00:00:00",
+                          "nullable": true
+                        },
+                        "mastered": {
+                          "type": "integer",
+                          "nullable": true
+                        },
+                        "user_id": {
+                          "type": "string",
+                          "nullable": true
+                        }
+                      }
+                    }
+                  }
+                }
+              },
+              "example": {
+                "records": [
+                  {
+                    "child_id": 0,
+                    "item_key": "string",
+                    "item_type": "string",
+                    "stage": 0,
+                    "ease": 0,
+                    "interval_days": 0,
+                    "repetitions": 0,
+                    "lapses": 0,
+                    "due_at": "2026-01-01 00:00:00",
+                    "last_reviewed_at": "2026-01-01 00:00:00",
+                    "mastered": 0,
+                    "user_id": "string"
+                  },
+                  {
+                    "child_id": 0,
+                    "item_key": "string",
+                    "item_type": "string",
+                    "stage": 0,
+                    "ease": 0,
+                    "interval_days": 0,
+                    "repetitions": 0,
+                    "lapses": 0,
+                    "due_at": "2026-01-01 00:00:00",
+                    "last_reviewed_at": "2026-01-01 00:00:00",
+                    "mastered": 0,
+                    "user_id": "string"
+                  }
+                ]
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "207": {
+            "description": "Multi-Status response indicating success/failure per record"
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        }
+      }
+    },
+    "/bulk/update/item_progress?Instance=53722_zossoz_sight_words": {
+      "put": {
+        "tags": [
+          "Bulk Endpoints"
+        ],
+        "summary": "Bulk update records in item_progress (Max 500)",
+        "description": "### Bulk Update Guide\nUpdate multiple existing records simultaneously using a single transaction.\n\n- **Requirement**: Every object in the `records` array MUST include the primary key (`id`).\n- **Max Limit**: 500 records per request.\n- **Atomic**: Wraps updates in a transaction (all-or-nothing per database rules).",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/Instance"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "records": {
+                    "type": "array",
+                    "description": "An array of objects to update. Must include the primary key.",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "child_id": {
+                          "type": "integer"
+                        },
+                        "item_key": {
+                          "type": "string"
+                        },
+                        "item_type": {
+                          "type": "string",
+                          "enum": [
+                            "letter",
+                            "digraph",
+                            "phonics_word",
+                            "sight_word",
+                            "sentence",
+                            "passage"
+                          ],
+                          "description": "dropdown: choose one of [letter, digraph, phonics_word, sight_word, sentence, passage]",
+                          "nullable": true
+                        },
+                        "stage": {
+                          "type": "integer",
+                          "nullable": true
+                        },
+                        "ease": {
+                          "type": "number",
+                          "nullable": true
+                        },
+                        "interval_days": {
+                          "type": "number",
+                          "nullable": true
+                        },
+                        "repetitions": {
+                          "type": "integer",
+                          "nullable": true
+                        },
+                        "lapses": {
+                          "type": "integer",
+                          "nullable": true
+                        },
+                        "due_at": {
+                          "type": "string",
+                          "format": "date-time",
+                          "example": "2026-01-01 00:00:00",
+                          "nullable": true
+                        },
+                        "last_reviewed_at": {
+                          "type": "string",
+                          "format": "date-time",
+                          "example": "2026-01-01 00:00:00",
+                          "nullable": true
+                        },
+                        "mastered": {
+                          "type": "integer",
+                          "nullable": true
+                        },
+                        "user_id": {
+                          "type": "string",
+                          "nullable": true
+                        }
+                      }
+                    }
+                  }
+                }
+              },
+              "example": {
+                "records": [
+                  {
+                    "id": 0,
+                    "child_id": 0,
+                    "item_key": "string",
+                    "item_type": "string",
+                    "stage": 0,
+                    "ease": 0,
+                    "interval_days": 0,
+                    "repetitions": 0,
+                    "lapses": 0,
+                    "due_at": "2026-01-01 00:00:00",
+                    "last_reviewed_at": "2026-01-01 00:00:00",
+                    "mastered": 0,
+                    "user_id": "string"
+                  },
+                  {
+                    "id": 0,
+                    "child_id": 0,
+                    "item_key": "string",
+                    "item_type": "string",
+                    "stage": 0,
+                    "ease": 0,
+                    "interval_days": 0,
+                    "repetitions": 0,
+                    "lapses": 0,
+                    "due_at": "2026-01-01 00:00:00",
+                    "last_reviewed_at": "2026-01-01 00:00:00",
+                    "mastered": 0,
+                    "user_id": "string"
+                  }
+                ]
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "207": {
+            "description": "Multi-Status response indicating success/failure per record"
+          },
+          "400": {
+            "description": "Bad Request (e.g. missing primary key)"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        }
+      }
+    },
+    "/bulk/delete/item_progress?Instance=53722_zossoz_sight_words": {
+      "delete": {
+        "tags": [
+          "Bulk Endpoints"
+        ],
+        "summary": "Bulk delete records from item_progress (Max 500)",
+        "description": "### Bulk Delete Guide\nDelete multiple records by providing the IDs of all the records you want to delete.\n\n- **Max Limit**: 500 IDs per request.",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/Instance"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "ids": {
+                    "type": "array",
+                    "description": "An array of primary keys to delete",
+                    "items": {
+                      "type": "integer"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully processed bulk delete"
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        }
+      }
+    },
+    "/create/passage_attempts?Instance=53722_zossoz_sight_words": {
+      "post": {
+        "tags": [
+          "Endpoints"
+        ],
+        "summary": "Create a new record in passage_attempts",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/Instance"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "child_id",
+                  "passage_key"
+                ],
+                "properties": {
+                  "child_id": {
+                    "type": "integer"
+                  },
+                  "passage_key": {
+                    "type": "string"
+                  },
+                  "words_total": {
+                    "type": "integer",
+                    "nullable": true
+                  },
+                  "words_correct": {
+                    "type": "integer",
+                    "nullable": true
+                  },
+                  "duration_sec": {
+                    "type": "integer",
+                    "nullable": true
+                  },
+                  "missed_words": {
+                    "type": "string",
+                    "nullable": true
+                  },
+                  "user_id": {
+                    "type": "string",
+                    "nullable": true
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Successfully created the record",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "example": "success"
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Record created successfully"
+                    },
+                    "id": {
+                      "type": "integer",
+                      "description": "ID of the newly created record"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        }
+      }
+    },
+    "/read/passage_attempts?Instance=53722_zossoz_sight_words": {
+      "get": {
+        "tags": [
+          "Endpoints"
+        ],
+        "summary": "Retrieve all records from passage_attempts",
+        "description": "### Filtering\n\nYou can filter results by adding column-based query parameters directly to the URL.\nOperators use bracket notation:\n\n| Operator | Example | Meaning |\n|---|---|---|\n| `field=value` | `?status=active` | Equal (default) |\n| `field[ne]=value` | `?status[ne]=inactive` | Not equal |\n| `field[gt]=value` | `?price[gt]=100` | Greater than |\n| `field[gte]=value` | `?date[gte]=2024-05-01` | Greater than or equal |\n| `field[lt]=value` | `?score[lt]=500` | Less than |\n| `field[lte]=value` | `?score[lte]=800` | Less than or equal |\n| `field[in]=value` | `?type[in]=a,b,c` | In list (comma-separated) |\n| `field[like]=value` | `?name[like]=john` | Partial match |\n\n**Available columns:** `child_id`, `passage_key`, `words_total`, `words_correct`, `duration_sec`, `missed_words`, `user_id`\n\n**Example:**\n```\n?Instance={db_name}&status=active&price[gte]=100&price[lte]=500&sort=price&order=desc&page=1&limit=20\n```",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/Instance"
+          },
+          {
+            "in": "query",
+            "name": "queryParams",
+            "required": false,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Filters, pagination & sorting as key=value pairs separated by &. Example: status=active&page=2&limit=5&sort=name&order=asc. Available columns: child_id, passage_key, words_total, words_correct, duration_sec, missed_words, user_id"
+          }
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully retrieved records",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string"
+                    },
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "child_id": {
+                            "type": "integer"
+                          },
+                          "passage_key": {
+                            "type": "string"
+                          },
+                          "words_total": {
+                            "type": "integer",
+                            "nullable": true
+                          },
+                          "words_correct": {
+                            "type": "integer",
+                            "nullable": true
+                          },
+                          "duration_sec": {
+                            "type": "integer",
+                            "nullable": true
+                          },
+                          "missed_words": {
+                            "type": "string",
+                            "nullable": true
+                          },
+                          "user_id": {
+                            "type": "string",
+                            "nullable": true
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        }
+      }
+    },
+    "/read/passage_attempts/{id}?Instance=53722_zossoz_sight_words": {
+      "get": {
+        "tags": [
+          "Endpoints"
+        ],
+        "summary": "Retrieve a record by ID from passage_attempts",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/Instance"
+          },
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            },
+            "description": "The ID of the record to retrieve"
+          }
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully retrieved the record",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string"
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "child_id": {
+                          "type": "integer"
+                        },
+                        "passage_key": {
+                          "type": "string"
+                        },
+                        "words_total": {
+                          "type": "integer",
+                          "nullable": true
+                        },
+                        "words_correct": {
+                          "type": "integer",
+                          "nullable": true
+                        },
+                        "duration_sec": {
+                          "type": "integer",
+                          "nullable": true
+                        },
+                        "missed_words": {
+                          "type": "string",
+                          "nullable": true
+                        },
+                        "user_id": {
+                          "type": "string",
+                          "nullable": true
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "404": {
+            "description": "Record Not Found"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        }
+      }
+    },
+    "/search/passage_attempts?Instance=53722_zossoz_sight_words": {
+      "post": {
+        "tags": [
+          "Endpoints"
+        ],
+        "summary": "Search for records in passage_attempts",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/Instance"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "child_id": {
+                    "type": "integer"
+                  },
+                  "passage_key": {
+                    "type": "string"
+                  },
+                  "words_total": {
+                    "type": "integer",
+                    "nullable": true
+                  },
+                  "words_correct": {
+                    "type": "integer",
+                    "nullable": true
+                  },
+                  "duration_sec": {
+                    "type": "integer",
+                    "nullable": true
+                  },
+                  "missed_words": {
+                    "type": "string",
+                    "nullable": true
+                  },
+                  "user_id": {
+                    "type": "string",
+                    "nullable": true
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully retrieved matching records",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string"
+                    },
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "child_id": {
+                            "type": "integer"
+                          },
+                          "passage_key": {
+                            "type": "string"
+                          },
+                          "words_total": {
+                            "type": "integer",
+                            "nullable": true
+                          },
+                          "words_correct": {
+                            "type": "integer",
+                            "nullable": true
+                          },
+                          "duration_sec": {
+                            "type": "integer",
+                            "nullable": true
+                          },
+                          "missed_words": {
+                            "type": "string",
+                            "nullable": true
+                          },
+                          "user_id": {
+                            "type": "string",
+                            "nullable": true
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        }
+      }
+    },
+    "/update/passage_attempts/{id}?Instance=53722_zossoz_sight_words": {
+      "put": {
+        "tags": [
+          "Endpoints"
+        ],
+        "summary": "Update a record in passage_attempts",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/Instance"
+          },
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            },
+            "description": "The ID of the record to update"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "child_id": {
+                    "type": "integer"
+                  },
+                  "passage_key": {
+                    "type": "string"
+                  },
+                  "words_total": {
+                    "type": "integer",
+                    "nullable": true
+                  },
+                  "words_correct": {
+                    "type": "integer",
+                    "nullable": true
+                  },
+                  "duration_sec": {
+                    "type": "integer",
+                    "nullable": true
+                  },
+                  "missed_words": {
+                    "type": "string",
+                    "nullable": true
+                  },
+                  "user_id": {
+                    "type": "string",
+                    "nullable": true
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully updated the record"
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        }
+      }
+    },
+    "/delete/passage_attempts/{id}?Instance=53722_zossoz_sight_words": {
+      "delete": {
+        "tags": [
+          "Endpoints"
+        ],
+        "summary": "Delete a record from passage_attempts",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/Instance"
+          },
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            },
+            "description": "The ID of the record to delete"
+          }
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully deleted the record"
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "404": {
+            "description": "Record Not Found"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        }
+      }
+    },
+    "/bulk/create/passage_attempts?Instance=53722_zossoz_sight_words": {
+      "post": {
+        "tags": [
+          "Bulk Endpoints"
+        ],
+        "summary": "Bulk create records in passage_attempts (Max 500)",
+        "description": "### Bulk Create Guide\nInsert multiple records into the database with a single API call.\n\n- **Max Limit**: 500 records per request.\n- **Performance**: Highly recommended over looping single POST requests.\n\n**Response**: Returns an HTTP 207 Multi-Status with a summary and a per-record breakdown of successes and failures.",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/Instance"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "records": {
+                    "type": "array",
+                    "description": "An array of objects to insert",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "child_id": {
+                          "type": "integer"
+                        },
+                        "passage_key": {
+                          "type": "string"
+                        },
+                        "words_total": {
+                          "type": "integer",
+                          "nullable": true
+                        },
+                        "words_correct": {
+                          "type": "integer",
+                          "nullable": true
+                        },
+                        "duration_sec": {
+                          "type": "integer",
+                          "nullable": true
+                        },
+                        "missed_words": {
+                          "type": "string",
+                          "nullable": true
+                        },
+                        "user_id": {
+                          "type": "string",
+                          "nullable": true
+                        }
+                      }
+                    }
+                  }
+                }
+              },
+              "example": {
+                "records": [
+                  {
+                    "child_id": 0,
+                    "passage_key": "string",
+                    "words_total": 0,
+                    "words_correct": 0,
+                    "duration_sec": 0,
+                    "missed_words": "string",
+                    "user_id": "string"
+                  },
+                  {
+                    "child_id": 0,
+                    "passage_key": "string",
+                    "words_total": 0,
+                    "words_correct": 0,
+                    "duration_sec": 0,
+                    "missed_words": "string",
+                    "user_id": "string"
+                  }
+                ]
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "207": {
+            "description": "Multi-Status response indicating success/failure per record"
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        }
+      }
+    },
+    "/bulk/update/passage_attempts?Instance=53722_zossoz_sight_words": {
+      "put": {
+        "tags": [
+          "Bulk Endpoints"
+        ],
+        "summary": "Bulk update records in passage_attempts (Max 500)",
+        "description": "### Bulk Update Guide\nUpdate multiple existing records simultaneously using a single transaction.\n\n- **Requirement**: Every object in the `records` array MUST include the primary key (`id`).\n- **Max Limit**: 500 records per request.\n- **Atomic**: Wraps updates in a transaction (all-or-nothing per database rules).",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/Instance"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "records": {
+                    "type": "array",
+                    "description": "An array of objects to update. Must include the primary key.",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "child_id": {
+                          "type": "integer"
+                        },
+                        "passage_key": {
+                          "type": "string"
+                        },
+                        "words_total": {
+                          "type": "integer",
+                          "nullable": true
+                        },
+                        "words_correct": {
+                          "type": "integer",
+                          "nullable": true
+                        },
+                        "duration_sec": {
+                          "type": "integer",
+                          "nullable": true
+                        },
+                        "missed_words": {
+                          "type": "string",
+                          "nullable": true
+                        },
+                        "user_id": {
+                          "type": "string",
+                          "nullable": true
+                        }
+                      }
+                    }
+                  }
+                }
+              },
+              "example": {
+                "records": [
+                  {
+                    "id": 0,
+                    "child_id": 0,
+                    "passage_key": "string",
+                    "words_total": 0,
+                    "words_correct": 0,
+                    "duration_sec": 0,
+                    "missed_words": "string",
+                    "user_id": "string"
+                  },
+                  {
+                    "id": 0,
+                    "child_id": 0,
+                    "passage_key": "string",
+                    "words_total": 0,
+                    "words_correct": 0,
+                    "duration_sec": 0,
+                    "missed_words": "string",
+                    "user_id": "string"
+                  }
+                ]
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "207": {
+            "description": "Multi-Status response indicating success/failure per record"
+          },
+          "400": {
+            "description": "Bad Request (e.g. missing primary key)"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        }
+      }
+    },
+    "/bulk/delete/passage_attempts?Instance=53722_zossoz_sight_words": {
+      "delete": {
+        "tags": [
+          "Bulk Endpoints"
+        ],
+        "summary": "Bulk delete records from passage_attempts (Max 500)",
+        "description": "### Bulk Delete Guide\nDelete multiple records by providing the IDs of all the records you want to delete.\n\n- **Max Limit**: 500 IDs per request.",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/Instance"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "ids": {
+                    "type": "array",
+                    "description": "An array of primary keys to delete",
+                    "items": {
+                      "type": "integer"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully processed bulk delete"
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        }
+      }
+    },
+    "/create/review_log?Instance=53722_zossoz_sight_words": {
+      "post": {
+        "tags": [
+          "Endpoints"
+        ],
+        "summary": "Create a new record in review_log",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/Instance"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "child_id",
+                  "item_key"
+                ],
+                "properties": {
+                  "child_id": {
+                    "type": "integer"
+                  },
+                  "item_key": {
+                    "type": "string"
+                  },
+                  "activity": {
+                    "type": "string",
+                    "nullable": true
+                  },
+                  "grade": {
+                    "type": "integer",
+                    "nullable": true
+                  },
+                  "response_ms": {
+                    "type": "integer",
+                    "nullable": true
+                  },
+                  "heard_audio": {
+                    "type": "integer",
+                    "nullable": true
+                  },
+                  "ai_feedback": {
+                    "type": "string",
+                    "nullable": true
+                  },
+                  "user_id": {
+                    "type": "string",
+                    "nullable": true
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Successfully created the record",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "example": "success"
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Record created successfully"
+                    },
+                    "id": {
+                      "type": "integer",
+                      "description": "ID of the newly created record"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        }
+      }
+    },
+    "/read/review_log?Instance=53722_zossoz_sight_words": {
+      "get": {
+        "tags": [
+          "Endpoints"
+        ],
+        "summary": "Retrieve all records from review_log",
+        "description": "### Filtering\n\nYou can filter results by adding column-based query parameters directly to the URL.\nOperators use bracket notation:\n\n| Operator | Example | Meaning |\n|---|---|---|\n| `field=value` | `?status=active` | Equal (default) |\n| `field[ne]=value` | `?status[ne]=inactive` | Not equal |\n| `field[gt]=value` | `?price[gt]=100` | Greater than |\n| `field[gte]=value` | `?date[gte]=2024-05-01` | Greater than or equal |\n| `field[lt]=value` | `?score[lt]=500` | Less than |\n| `field[lte]=value` | `?score[lte]=800` | Less than or equal |\n| `field[in]=value` | `?type[in]=a,b,c` | In list (comma-separated) |\n| `field[like]=value` | `?name[like]=john` | Partial match |\n\n**Available columns:** `child_id`, `item_key`, `activity`, `grade`, `response_ms`, `heard_audio`, `ai_feedback`, `user_id`\n\n**Example:**\n```\n?Instance={db_name}&status=active&price[gte]=100&price[lte]=500&sort=price&order=desc&page=1&limit=20\n```",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/Instance"
+          },
+          {
+            "in": "query",
+            "name": "queryParams",
+            "required": false,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Filters, pagination & sorting as key=value pairs separated by &. Example: status=active&page=2&limit=5&sort=name&order=asc. Available columns: child_id, item_key, activity, grade, response_ms, heard_audio, ai_feedback, user_id"
+          }
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully retrieved records",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string"
+                    },
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "child_id": {
+                            "type": "integer"
+                          },
+                          "item_key": {
+                            "type": "string"
+                          },
+                          "activity": {
+                            "type": "string",
+                            "nullable": true
+                          },
+                          "grade": {
+                            "type": "integer",
+                            "nullable": true
+                          },
+                          "response_ms": {
+                            "type": "integer",
+                            "nullable": true
+                          },
+                          "heard_audio": {
+                            "type": "integer",
+                            "nullable": true
+                          },
+                          "ai_feedback": {
+                            "type": "string",
+                            "nullable": true
+                          },
+                          "user_id": {
+                            "type": "string",
+                            "nullable": true
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        }
+      }
+    },
+    "/read/review_log/{id}?Instance=53722_zossoz_sight_words": {
+      "get": {
+        "tags": [
+          "Endpoints"
+        ],
+        "summary": "Retrieve a record by ID from review_log",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/Instance"
+          },
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            },
+            "description": "The ID of the record to retrieve"
+          }
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully retrieved the record",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string"
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "child_id": {
+                          "type": "integer"
+                        },
+                        "item_key": {
+                          "type": "string"
+                        },
+                        "activity": {
+                          "type": "string",
+                          "nullable": true
+                        },
+                        "grade": {
+                          "type": "integer",
+                          "nullable": true
+                        },
+                        "response_ms": {
+                          "type": "integer",
+                          "nullable": true
+                        },
+                        "heard_audio": {
+                          "type": "integer",
+                          "nullable": true
+                        },
+                        "ai_feedback": {
+                          "type": "string",
+                          "nullable": true
+                        },
+                        "user_id": {
+                          "type": "string",
+                          "nullable": true
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "404": {
+            "description": "Record Not Found"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        }
+      }
+    },
+    "/search/review_log?Instance=53722_zossoz_sight_words": {
+      "post": {
+        "tags": [
+          "Endpoints"
+        ],
+        "summary": "Search for records in review_log",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/Instance"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "child_id": {
+                    "type": "integer"
+                  },
+                  "item_key": {
+                    "type": "string"
+                  },
+                  "activity": {
+                    "type": "string",
+                    "nullable": true
+                  },
+                  "grade": {
+                    "type": "integer",
+                    "nullable": true
+                  },
+                  "response_ms": {
+                    "type": "integer",
+                    "nullable": true
+                  },
+                  "heard_audio": {
+                    "type": "integer",
+                    "nullable": true
+                  },
+                  "ai_feedback": {
+                    "type": "string",
+                    "nullable": true
+                  },
+                  "user_id": {
+                    "type": "string",
+                    "nullable": true
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully retrieved matching records",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string"
+                    },
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "child_id": {
+                            "type": "integer"
+                          },
+                          "item_key": {
+                            "type": "string"
+                          },
+                          "activity": {
+                            "type": "string",
+                            "nullable": true
+                          },
+                          "grade": {
+                            "type": "integer",
+                            "nullable": true
+                          },
+                          "response_ms": {
+                            "type": "integer",
+                            "nullable": true
+                          },
+                          "heard_audio": {
+                            "type": "integer",
+                            "nullable": true
+                          },
+                          "ai_feedback": {
+                            "type": "string",
+                            "nullable": true
+                          },
+                          "user_id": {
+                            "type": "string",
+                            "nullable": true
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        }
+      }
+    },
+    "/update/review_log/{id}?Instance=53722_zossoz_sight_words": {
+      "put": {
+        "tags": [
+          "Endpoints"
+        ],
+        "summary": "Update a record in review_log",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/Instance"
+          },
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            },
+            "description": "The ID of the record to update"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "child_id": {
+                    "type": "integer"
+                  },
+                  "item_key": {
+                    "type": "string"
+                  },
+                  "activity": {
+                    "type": "string",
+                    "nullable": true
+                  },
+                  "grade": {
+                    "type": "integer",
+                    "nullable": true
+                  },
+                  "response_ms": {
+                    "type": "integer",
+                    "nullable": true
+                  },
+                  "heard_audio": {
+                    "type": "integer",
+                    "nullable": true
+                  },
+                  "ai_feedback": {
+                    "type": "string",
+                    "nullable": true
+                  },
+                  "user_id": {
+                    "type": "string",
+                    "nullable": true
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully updated the record"
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        }
+      }
+    },
+    "/delete/review_log/{id}?Instance=53722_zossoz_sight_words": {
+      "delete": {
+        "tags": [
+          "Endpoints"
+        ],
+        "summary": "Delete a record from review_log",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/Instance"
+          },
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            },
+            "description": "The ID of the record to delete"
+          }
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully deleted the record"
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "404": {
+            "description": "Record Not Found"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        }
+      }
+    },
+    "/bulk/create/review_log?Instance=53722_zossoz_sight_words": {
+      "post": {
+        "tags": [
+          "Bulk Endpoints"
+        ],
+        "summary": "Bulk create records in review_log (Max 500)",
+        "description": "### Bulk Create Guide\nInsert multiple records into the database with a single API call.\n\n- **Max Limit**: 500 records per request.\n- **Performance**: Highly recommended over looping single POST requests.\n\n**Response**: Returns an HTTP 207 Multi-Status with a summary and a per-record breakdown of successes and failures.",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/Instance"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "records": {
+                    "type": "array",
+                    "description": "An array of objects to insert",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "child_id": {
+                          "type": "integer"
+                        },
+                        "item_key": {
+                          "type": "string"
+                        },
+                        "activity": {
+                          "type": "string",
+                          "nullable": true
+                        },
+                        "grade": {
+                          "type": "integer",
+                          "nullable": true
+                        },
+                        "response_ms": {
+                          "type": "integer",
+                          "nullable": true
+                        },
+                        "heard_audio": {
+                          "type": "integer",
+                          "nullable": true
+                        },
+                        "ai_feedback": {
+                          "type": "string",
+                          "nullable": true
+                        },
+                        "user_id": {
+                          "type": "string",
+                          "nullable": true
+                        }
+                      }
+                    }
+                  }
+                }
+              },
+              "example": {
+                "records": [
+                  {
+                    "child_id": 0,
+                    "item_key": "string",
+                    "activity": "string",
+                    "grade": 0,
+                    "response_ms": 0,
+                    "heard_audio": 0,
+                    "ai_feedback": "string",
+                    "user_id": "string"
+                  },
+                  {
+                    "child_id": 0,
+                    "item_key": "string",
+                    "activity": "string",
+                    "grade": 0,
+                    "response_ms": 0,
+                    "heard_audio": 0,
+                    "ai_feedback": "string",
+                    "user_id": "string"
+                  }
+                ]
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "207": {
+            "description": "Multi-Status response indicating success/failure per record"
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        }
+      }
+    },
+    "/bulk/update/review_log?Instance=53722_zossoz_sight_words": {
+      "put": {
+        "tags": [
+          "Bulk Endpoints"
+        ],
+        "summary": "Bulk update records in review_log (Max 500)",
+        "description": "### Bulk Update Guide\nUpdate multiple existing records simultaneously using a single transaction.\n\n- **Requirement**: Every object in the `records` array MUST include the primary key (`id`).\n- **Max Limit**: 500 records per request.\n- **Atomic**: Wraps updates in a transaction (all-or-nothing per database rules).",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/Instance"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "records": {
+                    "type": "array",
+                    "description": "An array of objects to update. Must include the primary key.",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "child_id": {
+                          "type": "integer"
+                        },
+                        "item_key": {
+                          "type": "string"
+                        },
+                        "activity": {
+                          "type": "string",
+                          "nullable": true
+                        },
+                        "grade": {
+                          "type": "integer",
+                          "nullable": true
+                        },
+                        "response_ms": {
+                          "type": "integer",
+                          "nullable": true
+                        },
+                        "heard_audio": {
+                          "type": "integer",
+                          "nullable": true
+                        },
+                        "ai_feedback": {
+                          "type": "string",
+                          "nullable": true
+                        },
+                        "user_id": {
+                          "type": "string",
+                          "nullable": true
+                        }
+                      }
+                    }
+                  }
+                }
+              },
+              "example": {
+                "records": [
+                  {
+                    "id": 0,
+                    "child_id": 0,
+                    "item_key": "string",
+                    "activity": "string",
+                    "grade": 0,
+                    "response_ms": 0,
+                    "heard_audio": 0,
+                    "ai_feedback": "string",
+                    "user_id": "string"
+                  },
+                  {
+                    "id": 0,
+                    "child_id": 0,
+                    "item_key": "string",
+                    "activity": "string",
+                    "grade": 0,
+                    "response_ms": 0,
+                    "heard_audio": 0,
+                    "ai_feedback": "string",
+                    "user_id": "string"
+                  }
+                ]
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "207": {
+            "description": "Multi-Status response indicating success/failure per record"
+          },
+          "400": {
+            "description": "Bad Request (e.g. missing primary key)"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        }
+      }
+    },
+    "/bulk/delete/review_log?Instance=53722_zossoz_sight_words": {
+      "delete": {
+        "tags": [
+          "Bulk Endpoints"
+        ],
+        "summary": "Bulk delete records from review_log (Max 500)",
+        "description": "### Bulk Delete Guide\nDelete multiple records by providing the IDs of all the records you want to delete.\n\n- **Max Limit**: 500 IDs per request.",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/Instance"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "ids": {
+                    "type": "array",
+                    "description": "An array of primary keys to delete",
+                    "items": {
+                      "type": "integer"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully processed bulk delete"
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "bearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
+      }
+    },
+    "parameters": {
+      "Instance": {
+        "name": "Instance",
+        "in": "query",
+        "required": true,
+        "schema": {
+          "type": "string",
+          "default": "53722_zossoz_sight_words"
+        },
+        "description": "Instance Name"
+      }
+    }
+  },
+  "security": [
+    {
+      "bearerAuth": []
+    }
+  ],
+  "tags": [
+    {
+      "name": "Endpoints",
+      "description": "Operations related to the API endpoints"
+    },
+    {
+      "name": "Bulk Endpoints",
+      "description": "Operations for bulk record processing (Create, Update, Delete)"
+    },
+    {
+      "name": "Join Endpoints",
+      "description": "Operations related to table joins"
+    }
+  ]
+}

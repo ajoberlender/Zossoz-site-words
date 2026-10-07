@@ -1,0 +1,7 @@
+# Xcode / XcodeGen
+ios/SightWords.xcodeproj/
+xcuserdata/
+DerivedData/
+build/
+*.xcuserstate
+.DS_Store
