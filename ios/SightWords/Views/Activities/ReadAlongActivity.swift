@@ -21,7 +21,7 @@ final class ReadAlongModel: ObservableObject {
         self.words = words
         let t = ReadAlongTracker(words: words)
         tracker = t
-        contextual = Array(Set(t.targets.filter { !$0.isEmpty }))
+        contextual = Array(Set(t.targets.filter { $0.count > 2 })) // biasing toward one- and two-letter words does more harm than good
     }
 
     func start() async {

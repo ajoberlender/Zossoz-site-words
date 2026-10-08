@@ -50,6 +50,15 @@ struct ReadAlongTracker {
                 i += 1; consumed = i
                 continue
             }
+            // Speech recognition routinely swallows tiny function words ("a", "the", "of"). If the child has clearly
+            // moved on to the word after one, count the small word as read instead of leaving them stuck on it.
+            if Self.softWords.contains(targets[cursor]), let nxt = nextTarget(after: cursor), Self.matches(tok, targets[nxt]) {
+                complete(now: now)   // the small word
+                complete(now: now)   // the word just heard
+                moved = true
+                i += 1; consumed = i
+                continue
+            }
             if Self.fillers.contains(tok) { i += 1; consumed = i; continue }
             if i == tokens.count - 1, !final { break }
             // A stable wrong word. Saying the previous word again (or the recognizer splitting it) isn't a mistake.
@@ -101,11 +110,31 @@ struct ReadAlongTracker {
         skipBlanks()
     }
 
+    private func nextTarget(after index: Int) -> Int? {
+        var j = index + 1
+        while j < targets.count {
+            if !targets[j].isEmpty { return j }
+            j += 1
+        }
+        return nil
+    }
+
     private mutating func skipBlanks() {
         while cursor < targets.count, targets[cursor].isEmpty { cursor += 1 }
     }
 
     // MARK: Text helpers
+
+    /// Short words recognizers often drop or mishear; the tracker doesn't hold the child on these.
+    private static let softWords: Set<String> = ["a", "an", "the", "of", "to", "in", "is", "it", "at", "on", "as", "and", "i"]
+
+    /// How these words commonly come back from the recognizer when a child says them quickly.
+    private static let variants: [String: Set<String>] = [
+        "a": ["uh", "eh", "ah", "ay", "er", "8"], "the": ["thee", "thuh", "duh", "da", "de", "th", "this"],
+        "to": ["too", "two", "tu", "tuh", "2"], "of": ["uv", "ov", "off"], "is": ["iz", "its"],
+        "i": ["eye", "ai", "hi"], "an": ["on", "en"], "and": ["an", "en", "in"], "at": ["it", "eh"],
+        "in": ["an", "en"], "it": ["at", "eat"], "on": ["an", "own"], "as": ["is", "has"],
+    ]
 
     private static let fillers: Set<String> = ["um", "uh", "umm", "uhh", "hmm", "mm", "er", "ah"]
 
@@ -131,6 +160,7 @@ struct ReadAlongTracker {
     static func matches(_ heard: String, _ target: String) -> Bool {
         if heard == target { return true }
         if homophone(heard, target) { return true }
+        if variants[target]?.contains(heard) == true { return true }
         // Small-child speech and on-device recognition are imperfect: allow one slip on longer words.
         if heard.count >= 4, target.count >= 4, editDistance(heard, target) <= 1 { return true }
         return false
