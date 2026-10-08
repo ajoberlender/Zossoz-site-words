@@ -3,7 +3,7 @@ import AVFoundation
 /// Text-to-speech using the system's on-device voices (works offline, nothing leaves the phone).
 /// This is the "help when a grown-up can't be there" feature: every card has a speaker button.
 @MainActor
-final class SpeechService: NSObject, ObservableObject, AVSpeechSynthesizerDelegate {
+final class SpeechService: NSObject, ObservableObject, AVSpeechSynthesizerDelegate, AVAudioPlayerDelegate {
     static let shared = SpeechService()
 
     @Published private(set) var isSpeaking = false
@@ -12,6 +12,7 @@ final class SpeechService: NSObject, ObservableObject, AVSpeechSynthesizerDelega
 
     private let synth = AVSpeechSynthesizer()
     private var continuation: CheckedContinuation<Void, Never>?
+    private var player: AVAudioPlayer?
 
     private override init() {
         super.init()
@@ -65,9 +66,13 @@ final class SpeechService: NSObject, ObservableObject, AVSpeechSynthesizerDelega
     /// enhanced/premium ones a parent picks) ignore or mangle it, which both clipped the sound and
     /// ignored the chosen voice. Instead we speak a drawn-out plain-text respelling, then an anchor word.
     func speakSound(_ item: Item, child: Child?, withExample: Bool = true) async {
-        let spoken = Self.stretched[item.text] ?? item.say
         let rate = min(child?.speechRate ?? 0.42, 0.40)
-        await speak(utteranceFor: AVSpeechUtterance(string: spoken + "…"), child: child, rate: rate)
+        // A recorded clip of the isolated sound is the only reliable way to say it: a speech engine asked for
+        // "sss" or "kuh" tends to read out letter names ("ess ess") or invent a word.
+        if await playClip(named: item.key.replacingOccurrences(of: ":", with: "-")) == false {
+            let spoken = Self.stretched[item.text] ?? item.say
+            await speak(utteranceFor: AVSpeechUtterance(string: spoken + "…"), child: child, rate: rate)
+        }
         guard withExample, !Task.isCancelled, let word = Self.exampleWord(for: item) else { return }
         try? await Task.sleep(nanoseconds: 250_000_000)
         if Task.isCancelled { return }
@@ -116,7 +121,31 @@ final class SpeechService: NSObject, ObservableObject, AVSpeechSynthesizerDelega
 
     func stop() {
         synth.stopSpeaking(at: .immediate)
+        player?.stop()
+        player = nil
         finish()
+    }
+
+    /// Plays Resources/Sounds/<name>.m4a. Returns false (without playing) if there's no such clip.
+    @discardableResult
+    private func playClip(named name: String) async -> Bool {
+        guard let url = Bundle.main.url(forResource: name, withExtension: "m4a")
+                ?? Bundle.main.url(forResource: name, withExtension: "m4a", subdirectory: "Sounds"),
+              let p = try? AVAudioPlayer(contentsOf: url) else { return false }
+        stop()
+        p.delegate = self
+        p.prepareToPlay()
+        player = p
+        isSpeaking = true
+        await withCheckedContinuation { (c: CheckedContinuation<Void, Never>) in
+            continuation = c
+            if !p.play() { finish() }
+        }
+        return true
+    }
+
+    nonisolated func audioPlayerDidFinishPlaying(_ player: AVAudioPlayer, successfully flag: Bool) {
+        Task { @MainActor in self.finish() }
     }
 
     private func speak(utteranceFor u: AVSpeechUtterance, child: Child?, rate: Double?) async {
