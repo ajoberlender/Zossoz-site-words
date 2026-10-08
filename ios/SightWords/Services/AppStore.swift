@@ -60,6 +60,7 @@ final class AppStore: ObservableObject {
             s.progress.removeAll { $0.childID == id }
             s.pendingReviews.removeAll { $0.childID == id }
             s.history.removeAll { $0.childID == id }
+            s.readingHistory.removeAll { $0.childID == id }
             s.pendingAttempts.removeAll { $0.childID == id }
             s.customWords.removeAll { $0.childID == id }
             s.stories.removeAll { $0.childID == id }
@@ -86,13 +87,15 @@ final class AppStore: ObservableObject {
                 heardAudio: Bool, aiFeedback: String? = nil) {
         mutate { s in
             let idx = s.progress.firstIndex { $0.childID == childID && $0.itemKey == item.key }
-            let prev = idx.map { s.progress[$0] } ?? ProgressRecord(childID: childID, itemKey: item.key,
+            let before = idx.map { s.progress[$0] }
+            let prev = before ?? ProgressRecord(childID: childID, itemKey: item.key,
                                                                      itemType: item.kind.rawValue, stage: item.stage)
             let next = SRS.review(prev, grade: grade)
             if let idx { s.progress[idx] = next } else { s.progress.append(next) }
             let event = ReviewEvent(childID: childID, itemKey: item.key, activity: activity,
                                     grade: grade.rawValue, responseMs: responseMs,
-                                    heardAudio: heardAudio, aiFeedback: aiFeedback)
+                                    heardAudio: heardAudio, aiFeedback: aiFeedback,
+                                    undo: ProgressUndo(previous: before))
             s.pendingReviews.append(event)
             s.history.append(event)
             if s.history.count > 20_000 { s.history.removeFirst(s.history.count - 20_000) }
@@ -101,7 +104,57 @@ final class AppStore: ObservableObject {
 
     func history(for childID: UUID) -> [ReviewEvent] { snap.history.filter { $0.childID == childID } }
 
-    func recordAttempt(_ a: PassageAttempt) { mutate { $0.pendingAttempts.append(a) } }
+    func recordAttempt(_ a: PassageAttempt) {
+        mutate { s in
+            s.pendingAttempts.append(a)
+            s.readingHistory.append(a)
+            if s.readingHistory.count > 5_000 { s.readingHistory.removeFirst(s.readingHistory.count - 5_000) }
+        }
+    }
+
+    /// Feeds how each word of a listen-along read went into spaced repetition — only for words the
+    /// child is already being taught (reading a story shouldn't introduce new cards). Once per unique word,
+    /// using the worst result: read cleanly → good; needed help or took several tries → hinted.
+    func recordWordOutcomes(childID: UUID, details: [WordResult], activity: String = "read_along") {
+        var worst: [String: Grade] = [:]
+        for d in details where d.read && !d.word.isEmpty {
+            let g: Grade = (d.helped || d.tries >= 2) ? .hinted : .good
+            if let cur = worst[d.word], cur.rawValue <= g.rawValue { continue }
+            worst[d.word] = g
+        }
+        let prog = progress(for: childID)
+        for (w, g) in worst {
+            for key in ["sight_word:\(w)", "phonics_word:\(w)", "custom:\(w)"] where prog[key] != nil {
+                if let it = item(forKey: key, child: childID) {
+                    record(childID: childID, item: it, grade: g, activity: activity, responseMs: 0, heardAudio: g == .hinted)
+                }
+            }
+        }
+    }
+
+    /// Human-readable name for a passage key stored on an attempt.
+    func passageTitle(_ key: String) -> String {
+        if key.hasPrefix("story:"), let s = snap.stories.first(where: { "story:\($0.id)" == key }) { return s.title }
+        if key.hasPrefix("passage:") { return Curriculum.byKey[key]?.title ?? String(key.dropFirst("passage:".count)) }
+        return Curriculum.byKey[key]?.title ?? Curriculum.byKey[key]?.text ?? key
+    }
+
+    func readingAttempts(for childID: UUID) -> [PassageAttempt] {
+        snap.readingHistory.filter { $0.childID == childID }.sorted { $0.date > $1.date }
+    }
+
+    /// Words this child keeps needing help with while reading aloud, most often first.
+    func stumbleWords(childID: UUID, limit: Int = 10) -> [(word: String, count: Int)] {
+        var counts: [String: Int] = [:]
+        for a in readingAttempts(for: childID) {
+            if let words = a.words {
+                for w in words where !w.word.isEmpty && (w.helped || w.tries >= 2) { counts[w.word, default: 0] += 1 }
+            } else {
+                for w in a.missedWords where !w.isEmpty { counts[w, default: 0] += 1 }
+            }
+        }
+        return counts.sorted { ($0.value, $1.key) > ($1.value, $0.key) }.prefix(limit).map { ($0.key, $0.value) }
+    }
 
     /// Moves a child up a stage once ≥80% of the current stage has been seen twice.
     @discardableResult
@@ -119,16 +172,161 @@ final class AppStore: ObservableObject {
 
     func finishSession(childID: UUID, starsEarned: Int) {
         guard var c = child(childID) else { return }
+        Self.registerPractice(&c, on: Date())
+        c.stars += starsEarned
+        updateChild(c)
+        Task { await sync() }
+    }
+
+    /// Streak bookkeeping for practice on `date` (never moves the streak backwards in time).
+    private static func registerPractice(_ c: inout Child, on date: Date) {
         let cal = Calendar.current
-        let today = cal.startOfDay(for: Date())
+        let day = cal.startOfDay(for: date)
         if let last = c.lastPracticeDate.map({ cal.startOfDay(for: $0) }) {
-            let days = cal.dateComponents([.day], from: last, to: today).day ?? 0
+            let days = cal.dateComponents([.day], from: last, to: day).day ?? 0
+            if days < 0 { return }
             if days == 1 { c.streakDays += 1 } else if days > 1 { c.streakDays = 1 }
             if days == 0 && c.streakDays == 0 { c.streakDays = 1 }
         } else { c.streakDays = 1 }
-        c.lastPracticeDate = Date()
-        c.stars += starsEarned
-        updateChild(c)
+        c.lastPracticeDate = date
+    }
+
+    // MARK: Practice log — fixing a session filed under the wrong reader
+
+    struct PracticeSession: Identifiable {
+        var id: Date { start }
+        var events: [ReviewEvent]
+        var attempts: [PassageAttempt]
+        var start: Date
+        var end: Date
+
+        /// Word-level detail events aren't "cards" the child was shown.
+        var cards: [ReviewEvent] { events.filter { !Self.detailActivities.contains($0.activity) } }
+        static let detailActivities: Set<String> = ["read_along", "story_help"]
+    }
+
+    /// Groups a reader's recent activity into sessions (a gap of 20+ minutes starts a new one), newest first.
+    func practiceSessions(for childID: UUID, limit: Int = 40) -> [PracticeSession] {
+        enum Mark { case event(ReviewEvent), attempt(PassageAttempt) }
+        var marks: [(Date, Mark)] = snap.history.filter { $0.childID == childID }.map { ($0.date, Mark.event($0)) }
+        marks += snap.readingHistory.filter { $0.childID == childID }.map { ($0.date, Mark.attempt($0)) }
+        marks.sort { $0.0 < $1.0 }
+
+        var sessions: [PracticeSession] = []
+        for (date, mark) in marks {
+            if var last = sessions.last, date.timeIntervalSince(last.end) < 20 * 60 {
+                last.end = date
+                switch mark { case .event(let e): last.events.append(e); case .attempt(let a): last.attempts.append(a) }
+                sessions[sessions.count - 1] = last
+            } else {
+                var n = PracticeSession(events: [], attempts: [], start: date, end: date)
+                switch mark { case .event(let e): n.events.append(e); case .attempt(let a): n.attempts.append(a) }
+                sessions.append(n)
+            }
+        }
+        return Array(sessions.reversed().prefix(limit))
+    }
+
+    /// Moves practice from one reader to another (`to == nil` deletes it). The first reader's progress is
+    /// rewound to how it was before those events and the second reader's is replayed forward, stars follow,
+    /// and streaks are adjusted. Anything already uploaded to the cloud review log stays there under the
+    /// original reader; progress and stats on the devices are corrected and synced.
+    func reassign(_ sessions: [PracticeSession], from source: UUID, to dest: UUID?) {
+        let events = sessions.flatMap(\.events).sorted { $0.date < $1.date }
+        let attempts = sessions.flatMap(\.attempts)
+        guard !events.isEmpty || !attempts.isEmpty else { return }
+        let selected = Set(events)
+        let selectedAttempts = Set(attempts)
+        let keys = Set(events.map(\.itemKey))
+        var itemsByKey: [String: Item] = [:]
+        if let dest { for k in keys { if let it = item(forKey: k, child: dest) { itemsByKey[k] = it } } }
+
+        mutate { s in
+            // 1. Rewind the source reader's progress for every item touched.
+            for key in keys {
+                guard let first = events.first(where: { $0.itemKey == key }), let undo = first.undo,
+                      let cur = s.progress.firstIndex(where: { $0.childID == source && $0.itemKey == key }) else { continue }
+                let current = s.progress[cur]
+                var base = undo.previous ?? ProgressRecord(childID: source, itemKey: key, itemType: current.itemType, stage: current.stage)
+                base.serverID = current.serverID
+                // Replay what they genuinely did afterwards, refreshing each event's own "before" snapshot.
+                let later = s.history.enumerated()
+                    .filter { $0.element.childID == source && $0.element.itemKey == key && $0.element.date >= first.date && !selected.contains($0.element) }
+                    .sorted { $0.element.date < $1.element.date }
+                for (idx, e) in later {
+                    s.history[idx].undo = ProgressUndo(previous: base)
+                    base = SRS.review(base, grade: Grade(rawValue: e.grade) ?? .good, now: e.date)
+                }
+                base.dirty = true
+                s.progress[cur] = base
+            }
+
+            // 2. Replay onto the destination reader.
+            var moved: [ReviewEvent] = []
+            if let dest {
+                for e in events {
+                    var m = e
+                    m.childID = dest
+                    if let item = itemsByKey[e.itemKey] {
+                        let idx = s.progress.firstIndex { $0.childID == dest && $0.itemKey == e.itemKey }
+                        let before = idx.map { s.progress[$0] }
+                        let prev = before ?? ProgressRecord(childID: dest, itemKey: item.key, itemType: item.kind.rawValue, stage: item.stage)
+                        let next = SRS.review(prev, grade: Grade(rawValue: e.grade) ?? .good, now: e.date)
+                        if let idx { s.progress[idx] = next } else { s.progress.append(next) }
+                        m.undo = ProgressUndo(previous: before)
+                    } else {
+                        m.undo = nil // not an item the destination has (e.g. the other reader's custom word)
+                    }
+                    moved.append(m)
+                }
+            }
+
+            // 3. Swap the events and attempts over.
+            let wasPending = Set(s.pendingReviews).intersection(selected)
+            s.history.removeAll { selected.contains($0) }
+            s.pendingReviews.removeAll { selected.contains($0) }
+            if dest != nil {
+                s.history.append(contentsOf: moved)
+                s.history.sort { $0.date < $1.date }
+                for (orig, m) in zip(events, moved) where wasPending.contains(orig) { s.pendingReviews.append(m) }
+            }
+            let pendingAttempts = Set(s.pendingAttempts).intersection(selectedAttempts)
+            s.readingHistory.removeAll { selectedAttempts.contains($0) }
+            s.pendingAttempts.removeAll { selectedAttempts.contains($0) }
+            if let dest {
+                let movedAttempts: [PassageAttempt] = attempts.map { var a = $0; a.childID = dest; return a }
+                s.readingHistory.append(contentsOf: movedAttempts)
+                s.readingHistory.sort { $0.date < $1.date }
+                for (orig, m) in zip(attempts, movedAttempts) where pendingAttempts.contains(orig) { s.pendingAttempts.append(m) }
+            }
+
+            // 4. Stars and streaks. Only flash-card answers earned stars.
+            let starEvents = events.filter { $0.grade >= Grade.good.rawValue && !PracticeSession.detailActivities.contains($0.activity) && $0.activity != "story" }
+            let earned = starEvents.count
+            let cal = Calendar.current
+            if let si = s.children.firstIndex(where: { $0.id == source }) {
+                s.children[si].stars = max(0, s.children[si].stars - earned)
+                // If that was the only practice on the last practice day, step the streak back.
+                if let last = s.children[si].lastPracticeDate {
+                    let stillPracticed = s.history.contains { $0.childID == source && cal.isDate($0.date, inSameDayAs: last) }
+                    let removedThatDay = events.contains { cal.isDate($0.date, inSameDayAs: last) }
+                        || attempts.contains { cal.isDate($0.date, inSameDayAs: last) }
+                    if removedThatDay && !stillPracticed {
+                        s.children[si].streakDays = max(0, s.children[si].streakDays - 1)
+                        s.children[si].lastPracticeDate = s.history.filter { $0.childID == source }.map(\.date).max()
+                    }
+                }
+                s.children[si].dirty = true
+            }
+            if let dest, let di = s.children.firstIndex(where: { $0.id == dest }) {
+                s.children[di].stars += earned
+                var c = s.children[di]
+                let days = Set((events.map(\.date) + attempts.map(\.date)).map { cal.startOfDay(for: $0) }).sorted()
+                for d in days { Self.registerPractice(&c, on: d) }
+                c.dirty = true
+                s.children[di] = c
+            }
+        }
         Task { await sync() }
     }
 

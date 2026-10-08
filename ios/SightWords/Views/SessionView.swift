@@ -95,7 +95,7 @@ private struct SessionBody: View {
                 .padding(.horizontal)
 
                 if model.finished {
-                    SessionSummary(stars: model.stars, empty: model.queue.isEmpty, onClose: onClose)
+                    SessionSummary(childID: model.childID, stars: model.stars, empty: model.queue.isEmpty, onClose: onClose)
                 } else if let card = model.current, let child = model.child {
                     activity(for: card, child: child).id(card.id)
                 }
@@ -127,9 +127,17 @@ private struct SessionBody: View {
         case .readAloud:
             ReadAloudActivity(item: card.item, child: child, done: done)
         case .tapAlong:
-            TapAlongActivity(title: card.item.title, text: card.item.text, child: child) { helped, total, _ in
-                let frac = total == 0 ? 0 : Double(helped.count) / Double(total)
-                done(frac == 0 ? .good : (frac <= 0.25 ? .hinted : .missed), !helped.isEmpty, 0, helped.joined(separator: ","))
+            ReadingActivity(title: card.item.title, text: card.item.text, child: child) { outcome in
+                let helped = outcome.helped
+                let frac = outcome.total == 0 ? 0 : Double(helped.count) / Double(outcome.total)
+                if let details = outcome.details {
+                    model.store.recordAttempt(PassageAttempt(
+                        childID: model.childID, passageKey: card.item.key, wordsTotal: outcome.total,
+                        wordsCorrect: max(0, outcome.total - helped.count), durationSec: outcome.seconds,
+                        missedWords: helped, words: details))
+                    model.store.recordWordOutcomes(childID: model.childID, details: details)
+                }
+                done(frac == 0 ? .good : (frac <= 0.25 ? .hinted : .missed), !helped.isEmpty, outcome.seconds * 1000, helped.joined(separator: ","))
             }
         }
     }
@@ -153,9 +161,14 @@ private struct FeedbackBanner: View {
 }
 
 private struct SessionSummary: View {
+    let childID: UUID
     let stars: Int
     let empty: Bool
     var onClose: () -> Void
+    @EnvironmentObject var store: AppStore
+    @State private var showGate = false
+    @State private var gatePassed = false
+    @State private var showChoice = false
 
     var body: some View {
         VStack(spacing: 20) {
@@ -166,7 +179,24 @@ private struct SessionSummary: View {
             else { Text("Come back later — your words need a little rest.").multilineTextAlignment(.center).foregroundStyle(.secondary) }
             Spacer()
             BigButton(title: "Done", color: Theme.mint, action: onClose).padding(.horizontal, 32)
+            if !empty, let name = store.child(childID)?.name, store.children.count > 1 {
+                Button("Wasn't \(name)? Move this practice…") { showGate = true }
+                    .font(.callout)
+            }
         }
         .padding()
+        .sheet(isPresented: $showGate, onDismiss: {
+            if gatePassed { gatePassed = false; showChoice = true }
+        }) { GrownUpGate { gatePassed = true } }
+        .confirmationDialog("Who was actually reading?", isPresented: $showChoice, titleVisibility: .visible) {
+            ForEach(store.children.filter { $0.id != childID }) { other in
+                Button("\(other.avatar) \(other.name)") {
+                    if let latest = store.practiceSessions(for: childID, limit: 1).first {
+                        store.reassign([latest], from: childID, to: other.id)
+                    }
+                    onClose()
+                }
+            }
+        } message: { Text("This session's progress and stars move to them.") }
     }
 }

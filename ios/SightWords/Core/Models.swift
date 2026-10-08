@@ -31,6 +31,21 @@ struct ProgressRecord: Codable, Hashable {
     var dirty: Bool = true
 }
 
+/// What an item's progress looked like just before an event was applied, so a mis-filed
+/// practice session can be rewound. `nil` on events logged before this existed.
+struct ProgressUndo: Codable, Hashable {
+    var previous: ProgressRecord?
+}
+
+/// How one word of a read-aloud went.
+struct WordResult: Codable, Hashable {
+    var word: String      // lowercased, punctuation stripped
+    var tries: Int = 0    // wrong things heard before the right word
+    var helped: Bool = false
+    var ms: Int = 0
+    var read: Bool = false // false = the child stopped before reaching it
+}
+
 struct ReviewEvent: Codable, Hashable {
     var childID: UUID
     var itemKey: String
@@ -40,6 +55,7 @@ struct ReviewEvent: Codable, Hashable {
     var heardAudio: Bool
     var aiFeedback: String?
     var date: Date = Date()
+    var undo: ProgressUndo?
 }
 
 struct PassageAttempt: Codable, Hashable {
@@ -50,6 +66,8 @@ struct PassageAttempt: Codable, Hashable {
     var durationSec: Int
     var missedWords: [String]
     var date: Date = Date()
+    /// Per-word detail from listen-along reading. `nil` for tap-along reads and older attempts.
+    var words: [WordResult]?
 }
 
 struct CustomWord: Codable, Identifiable, Hashable {
@@ -83,6 +101,8 @@ struct LocalSnapshot: Codable {
     var stories: [GeneratedStory] = []
     /// Permanent local activity log (pendingReviews is cleared after sync) — powers parent analytics.
     var history: [ReviewEvent] = []
+    /// Permanent local log of passage reads (pendingAttempts is cleared after sync).
+    var readingHistory: [PassageAttempt] = []
 
     init() {}
 
@@ -97,5 +117,6 @@ struct LocalSnapshot: Codable {
         deletedChildServerIDs = try c.decodeIfPresent([Int].self, forKey: .deletedChildServerIDs) ?? []
         stories = try c.decodeIfPresent([GeneratedStory].self, forKey: .stories) ?? []
         history = try c.decodeIfPresent([ReviewEvent].self, forKey: .history) ?? []
+        readingHistory = try c.decodeIfPresent([PassageAttempt].self, forKey: .readingHistory) ?? []
     }
 }

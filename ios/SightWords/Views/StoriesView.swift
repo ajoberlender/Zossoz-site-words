@@ -130,8 +130,8 @@ private struct StoryReader: View {
                             Spacer()
                         }
                         .padding(.horizontal).padding(.top, 8)
-                        TapAlongActivity(title: target.title, text: target.text, child: child) { helped, total, seconds in
-                            finish(child: child, helped: helped, total: total, seconds: seconds)
+                        ReadingActivity(title: target.title, text: target.text, child: child) { outcome in
+                            finish(child: child, outcome: outcome)
                         }
                     }
                 }
@@ -140,22 +140,30 @@ private struct StoryReader: View {
         .screenBackground()
     }
 
-    private func finish(child: Child, helped: [String], total: Int, seconds: Int) {
-        let missed = helped
+    private func finish(child: Child, outcome: ReadOutcome) {
+        let missed = outcome.helped
+        let total = outcome.total
+        let seconds = outcome.seconds
         store.recordAttempt(PassageAttempt(childID: childID, passageKey: target.key, wordsTotal: total,
-                                           wordsCorrect: max(0, total - missed.count), durationSec: seconds, missedWords: missed))
+                                           wordsCorrect: max(0, total - missed.count), durationSec: seconds,
+                                           missedWords: missed, words: outcome.details))
         // Built-in passages are scheduled by spaced repetition like everything else.
         if target.isBuiltIn, let item = Curriculum.byKey[target.key] {
             let frac = total == 0 ? 0 : Double(missed.count) / Double(total)
             store.record(childID: childID, item: item, grade: frac == 0 ? .good : (frac <= 0.25 ? .hinted : .missed),
                          activity: "story", responseMs: seconds * 1000, heardAudio: !missed.isEmpty, aiFeedback: nil)
         }
-        // Words they needed help with get scheduled sooner — but only ones already being tracked.
-        let progress = store.progress(for: childID)
-        for w in missed {
-            for key in ["sight_word:\(w)", "phonics_word:\(w)"] where progress[key] != nil {
-                if let item = Curriculum.byKey[key] {
-                    store.record(childID: childID, item: item, grade: .hinted, activity: "story_help", responseMs: 0, heardAudio: true)
+        if let details = outcome.details {
+            // Listened along: every word they read (cleanly or not) updates the words they're learning.
+            store.recordWordOutcomes(childID: childID, details: details)
+        } else {
+            // Words they needed help with get scheduled sooner — but only ones already being tracked.
+            let progress = store.progress(for: childID)
+            for w in missed {
+                for key in ["sight_word:\(w)", "phonics_word:\(w)"] where progress[key] != nil {
+                    if let item = Curriculum.byKey[key] {
+                        store.record(childID: childID, item: item, grade: .hinted, activity: "story_help", responseMs: 0, heardAudio: true)
+                    }
                 }
             }
         }

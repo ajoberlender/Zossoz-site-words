@@ -106,9 +106,6 @@ final class ListeningService: ObservableObject {
     }
 
     private static func homophone(_ a: String, _ b: String) -> Bool {
-        let groups = [["to", "too", "two"], ["for", "four"], ["no", "know"], ["see", "sea"], ["one", "won"],
-                      ["red", "read"], ["be", "bee"], ["i", "eye"], ["there", "their"], ["our", "are"], ["by", "buy"],
-                      ["new", "knew"], ["write", "right"], ["would", "wood"], ["so", "sew"], ["ate", "eight"]]
-        return groups.contains { $0.contains(a) && $0.contains(b) }
+        ReadAlongTracker.homophone(a, b)
     }
 }

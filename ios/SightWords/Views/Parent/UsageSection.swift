@@ -9,7 +9,8 @@ struct UsageSection: View {
     private struct Day: Identifiable { let id: Date; let cards: Int }
 
     var body: some View {
-        let events = store.history(for: childID)
+        // Per-word detail events from read-aloud aren't flash cards; they're summarised in Reading aloud.
+        let events = store.history(for: childID).filter { !AppStore.PracticeSession.detailActivities.contains($0.activity) }
         let cal = Calendar.current
         let today = cal.startOfDay(for: Date())
         let days: [Day] = (0..<14).reversed().map { off in

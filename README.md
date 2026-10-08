@@ -12,6 +12,8 @@ whole paragraphs. SwiftUI, iOS 17+, with on-device AI via Apple's Foundation Mod
 | Spaced repetition | SM-2 tuned for young kids: hour/day-scale first intervals, gentle lapse penalty, "mastered" at a 21-day interval (`SRS.swift`) |
 | Text-to-speech | `AVSpeechSynthesizer`, on-device voices. Speaker button on every screen, letter sounds via IPA, "sound it out" mode, word-by-word highlight when reading stories |
 | On-device speech check | `SFSpeechRecognizer` with `requiresOnDeviceRecognition = true`; falls back to ✓ / ✗ buttons |
+| Listen-along reading | Stories and sentences open the mic (on-device only). The highlight sits on the current word and moves only when it's read correctly; after ~6s stuck, tapping the word says it (counted as help). Per-word results feed the parent stats and spaced repetition. `ReadAlongTracker` holds the matching logic; falls back to tap-for-help, or a parent can turn it off |
+| Fixing the wrong reader | Parent → Practice log: move or delete sessions filed under the wrong reader (progress is rewound/replayed, stars and streaks adjusted). Also offered on the session-complete screen |
 | Apple Foundation Models | Story Maker (stories built from words the child has learned, validated against their vocabulary, retried, then falls back to the library) and a parent Coach (`AIService.swift`). Availability is always checked |
 | Multiple children | One parent login, a profile per reader |
 | Custom words | Parents add names/words that join the SRS queue |

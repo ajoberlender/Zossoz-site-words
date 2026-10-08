@@ -12,6 +12,7 @@ struct ParentView: View {
     @State private var coach: CoachNotes?
     @State private var coaching = false
     @State private var confirmDelete = false
+    @AppStorage("preferTapMode") private var preferTap = false
     private let voices = SpeechService.availableVoices()
 
     var body: some View {
@@ -20,6 +21,10 @@ struct ParentView: View {
                 Form {
                     profileSection(child)
                     UsageSection(childID: childID)
+                    ReadingStatsSection(childID: childID)
+                    Section {
+                        NavigationLink("Wrong reader? Fix practice sessions") { PracticeLogView(childID: childID) }
+                    } footer: { Text("If one child read on another's profile, move that practice to the right reader.") }
                     progressSection(child)
                     troubleSection()
                     learnerSection(child)
@@ -121,6 +126,9 @@ struct ParentView: View {
                 Text("Speaking speed")
                 Slider(value: binding(c, \.speechRate), in: 0.25...0.55)
             }
+            Toggle("Listen while they read stories", isOn: Binding(get: { !preferTap }, set: { preferTap = !$0 }))
+            Text("Highlights each word as it's read aloud and waits if a word isn't right. Uses on-device speech recognition; turn off to use tap-for-help instead.")
+                .font(.footnote).foregroundStyle(.secondary)
             Button("Test voice") { Task { await SpeechService.shared.speak("Hi \(c.name)! Let's read together.", child: store.child(childID)) } }
             Text("Tip: download an Enhanced or Premium voice in Settings → Accessibility → Spoken Content → Voices for friendlier speech.")
                 .font(.footnote).foregroundStyle(.secondary)
