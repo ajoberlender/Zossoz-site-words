@@ -1,0 +1,17 @@
+{
+  "output": "/Users/ajoberlender1/Desktop/Recordings for kids app/letter-n.mp3",
+  "segments": [
+    {
+      "index": 0,
+      "identity": "8075169524a21ddc52d4",
+      "seed": 0,
+      "voice": "AJ",
+      "speaker": "NARRATOR",
+      "chapter": null,
+      "text": "[N AH0]",
+      "gap_after": 0.0,
+      "wav": "1109a1a3ae9076985045.wav",
+      "duration": 1.56
+    }
+  ]
+}

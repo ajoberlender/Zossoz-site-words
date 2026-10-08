@@ -1,7 +1,8 @@
 # letter-i: /ɪ/ as in iguana
 # Say this: Short i, like the start of “it” or “igloo”: “ih”.
 # Don't say this: Not the letter name “eye”. Not “ee”.
+# Carrier: the model is near-silent on a lone phoneme, so the sound is spoken as "… as in iguana" and cut out by make_clips.py.
 @gap 0
 @voice NARRATOR AJ
 
-[IH1]
+[IH1] as in iguana.

@@ -1,0 +1,17 @@
+{
+  "output": "/Users/ajoberlender1/Desktop/Recordings for kids app/letter-y.mp3",
+  "segments": [
+    {
+      "index": 0,
+      "identity": "14dbbbffa6d4ed364b34",
+      "seed": 0,
+      "voice": "AJ",
+      "speaker": "NARRATOR",
+      "chapter": null,
+      "text": "[Y AH0]",
+      "gap_after": 0.0,
+      "wav": "7f9bc4d322be6d6acc2e.wav",
+      "duration": 1.56
+    }
+  ]
+}

@@ -1,0 +1,17 @@
+{
+  "output": "/Users/ajoberlender1/Desktop/Recordings for kids app/letter-z.mp3",
+  "segments": [
+    {
+      "index": 0,
+      "identity": "413f80ff749fa00ac59e",
+      "seed": 0,
+      "voice": "AJ",
+      "speaker": "NARRATOR",
+      "chapter": null,
+      "text": "[Z AH0]",
+      "gap_after": 0.0,
+      "wav": "b87a45045b1f0f9aad30.wav",
+      "duration": 1.56
+    }
+  ]
+}

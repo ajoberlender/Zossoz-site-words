@@ -1,0 +1,38 @@
+REVIEW digraph-ai   seed 4  0.48s  [EY1] as in train. faint: -22 dB under the rest of the sentence
+REVIEW digraph-ar   seed 5  0.32s  [AA1 R] as in star. short (target 0.6-1.0s) faint: -22 dB under the rest of the sentence
+ok     digraph-ch   seed 4  0.50s  [CH AH0] as in chip. cut to 0.5s (was 0.66s)
+ok     digraph-ck   seed 0  0.50s  [K AH0] as in duck. cut to 0.5s (was 0.63s)
+REVIEW digraph-ee   '[IY1] as in bee.': no take where Whisper heard the whole sentence
+ok     digraph-ng   seed 0  0.81s  [AH0 NG] as in ring.
+REVIEW digraph-oa   seed 1  0.46s  [OW1] as in goat. faint: -21 dB under the rest of the sentence
+REVIEW digraph-oo   seed 4  0.56s  [UW1] as in moon. faint: -22 dB under the rest of the sentence
+REVIEW digraph-qu   seed 2  0.44s  [K W AH0] as in queen. faint: -11 dB under the rest of the sentence
+ok     digraph-sh   seed 1  0.78s  [SH AH0] as in ship.
+ok     digraph-th   seed 3  0.73s  [TH AH0] as in thin.
+ok     digraph-wh   seed 0  0.50s  [W AH0] as in whale. cut to 0.5s (was 0.66s)
+REVIEW letter-a     seed 4  0.47s  [AE1] as in apple. faint: -21 dB under the rest of the sentence
+REVIEW letter-b     seed 1  0.45s  [B AH0] as in bear. faint: -20 dB under the rest of the sentence
+ok     letter-c     seed 3  0.27s  [K AH0] as in cat.
+REVIEW letter-d     seed 3  0.49s  [D AH0] as in dog. faint: -25 dB under the rest of the sentence
+REVIEW letter-e     seed 1  0.29s  [EH1] as in egg. short (target 0.6-1.0s) faint: -23 dB under the rest of the sentence
+REVIEW letter-f     seed 3  0.26s  [F AH0] as in fish. short (target 0.6-1.0s)
+ok     letter-g     seed 4  0.21s  [G AH0] as in goat.
+ok     letter-h     seed 1  0.83s  [HH AA1] as in hat.
+REVIEW letter-i     seed 5  0.20s  [IH1] as in iguana. short (target 0.6-1.0s) faint: -26 dB under the rest of the sentence
+ok     letter-j     seed 0  0.25s  [JH AH0] as in juice.
+REVIEW letter-k     seed 2  0.50s  [K AH0] as in key. faint: -14 dB under the rest of the sentence cut to 0.5s (was 0.52s)
+ok     letter-l     seed 0  0.50s  [L AH0] as in lion.
+ok     letter-m     seed 0  0.72s  [M AH0] as in moon.
+ok     letter-n     seed 4  0.69s  [N AH0] as in nose.
+REVIEW letter-o     seed 1  0.34s  [AA1] as in octopus. short (target 0.6-1.0s) faint: -22 dB under the rest of the sentence
+REVIEW letter-p     seed 0  0.40s  [P AH0] as in penguin. faint: -23 dB under the rest of the sentence
+REVIEW letter-q     seed 2  0.44s  [K W AH0] as in queen. faint: -11 dB under the rest of the sentence
+ok     letter-r     seed 0  0.59s  [R AH0] as in rainbow.
+ok     letter-s     seed 4  0.80s  [S AH0] as in snake.
+ok     letter-t     seed 3  0.22s  [T AH0] as in tiger.
+REVIEW letter-u     seed 1  0.32s  [AH1] as in umbrella. short (target 0.6-1.0s) faint: -23 dB under the rest of the sentence
+REVIEW letter-v     seed 3  0.20s  [V AH0] as in violin. short (target 0.6-1.0s)
+ok     letter-w     seed 0  0.50s  [W AH0] as in whale. cut to 0.5s (was 0.66s)
+ok     letter-x     seed 3  0.25s  [K S AH0] as in fox.
+REVIEW letter-y     '[Y AH0] as in yo-yo.': no take where Whisper heard the whole sentence
+REVIEW letter-z     seed 1  0.35s  [Z AH0] as in zebra. short (target 0.6-1.0s) faint: -10 dB under the rest of the sentence

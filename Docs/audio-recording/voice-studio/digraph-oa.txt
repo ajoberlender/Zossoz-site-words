@@ -1,7 +1,8 @@
 # digraph-oa: /oʊ/ as in goat
 # Say this: Long o, as in “goat”: “ohhh”.
 # Don't say this: Not “aw”.
+# Carrier: the model is near-silent on a lone phoneme, so the sound is spoken as "… as in goat" and cut out by make_clips.py.
 @gap 0
 @voice NARRATOR AJ
 
-[OW1]
+[OW1] as in goat.

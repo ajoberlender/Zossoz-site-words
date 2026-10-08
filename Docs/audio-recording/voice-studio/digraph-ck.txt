@@ -2,7 +2,8 @@
 # Say this: The “k” sound at the end of “duck”: a quick “k”.
 # Don't say this: Not “see-kay”.
 # Note: A stop sound can't be bare, so this is consonant + short schwa. The clipped 'uh' is expected; keep it as short as possible.
+# Carrier: the model is near-silent on a lone phoneme, so the sound is spoken as "… as in duck" and cut out by make_clips.py.
 @gap 0
 @voice NARRATOR AJ
 
-[K AH0]
+[K AH0] as in duck.

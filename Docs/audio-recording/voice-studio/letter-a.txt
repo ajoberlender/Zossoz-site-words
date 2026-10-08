@@ -1,7 +1,8 @@
 # letter-a: /æ/ as in apple
 # Say this: Short a, the first sound in “apple”: “aaaa” (mouth open, jaw dropped).
 # Don't say this: Not the letter name “ay”. Not “ah”.
+# Carrier: the model is near-silent on a lone phoneme, so the sound is spoken as "… as in apple" and cut out by make_clips.py.
 @gap 0
 @voice NARRATOR AJ
 
-[AE1]
+[AE1] as in apple.

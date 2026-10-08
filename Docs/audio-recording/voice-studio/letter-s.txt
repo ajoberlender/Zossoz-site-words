@@ -2,7 +2,8 @@
 # Say this: A steady hiss, like a snake: “ssssss”.
 # Don't say this: Don't say the letter name “ess”. No vowel before or after.
 # Note: A bare consonant isn't allowed (every group needs a vowel), so this is consonant + short schwa. The sound should be held; if the 'uh' is audible, trim it in the editor.
+# Carrier: the model is near-silent on a lone phoneme, so the sound is spoken as "… as in snake" and cut out by make_clips.py.
 @gap 0
 @voice NARRATOR AJ
 
-[S AH0]
+[S AH0] as in snake.

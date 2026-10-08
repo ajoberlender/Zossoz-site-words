@@ -1,0 +1,17 @@
+{
+  "output": "/Users/ajoberlender1/Desktop/Recordings for kids app/letter-t.mp3",
+  "segments": [
+    {
+      "index": 0,
+      "identity": "89d3d3f352f1ec9765c2",
+      "seed": 0,
+      "voice": "AJ",
+      "speaker": "NARRATOR",
+      "chapter": null,
+      "text": "[T AH0]",
+      "gap_after": 0.0,
+      "wav": "a89dc4cc08c321bf1d45.wav",
+      "duration": 1.56
+    }
+  ]
+}

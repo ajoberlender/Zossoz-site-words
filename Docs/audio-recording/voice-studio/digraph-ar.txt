@@ -1,7 +1,8 @@
 # digraph-ar: /ɑr/ as in star
 # Say this: The sound in “star” and “car”: “arrr”.
 # Don't say this: Not “ay-are”.
+# Carrier: the model is near-silent on a lone phoneme, so the sound is spoken as "… as in star" and cut out by make_clips.py.
 @gap 0
 @voice NARRATOR AJ
 
-[AA1 R]
+[AA1 R] as in star.

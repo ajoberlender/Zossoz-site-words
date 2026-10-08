@@ -1,7 +1,8 @@
 # letter-o: /ɑ/ as in octopus
 # Say this: Short o, as in “octopus” or “hot”: “ahh” (mouth open wide).
 # Don't say this: Not the letter name “oh”. Not “aw”.
+# Carrier: the model is near-silent on a lone phoneme, so the sound is spoken as "… as in octopus" and cut out by make_clips.py.
 @gap 0
 @voice NARRATOR AJ
 
-[AA1]
+[AA1] as in octopus.

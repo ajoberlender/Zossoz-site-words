@@ -2,7 +2,8 @@
 # Say this: The hum at the end of “ring”: back of the tongue up, voice through the nose: “ngngng”.
 # Don't say this: Not “n” + “g”. Not the hard g.
 # Note: /ng/ can't start a group, so the vowel comes first. Cut the leading 'uh' in the editor, leaving the 'ng'.
+# Carrier: the model is near-silent on a lone phoneme, so the sound is spoken as "… as in ring" and cut out by make_clips.py.
 @gap 0
 @voice NARRATOR AJ
 
-[AH0 NG]
+[AH0 NG] as in ring.

@@ -1,0 +1,17 @@
+{
+  "output": "/Users/ajoberlender1/Desktop/Recordings for kids app/letter-i.mp3",
+  "segments": [
+    {
+      "index": 0,
+      "identity": "9b406cb0ec78531bf920",
+      "seed": 0,
+      "voice": "AJ",
+      "speaker": "NARRATOR",
+      "chapter": null,
+      "text": "[IH1]",
+      "gap_after": 0.0,
+      "wav": "ec147ece5f86ca9a3c9e.wav",
+      "duration": 1.48
+    }
+  ]
+}

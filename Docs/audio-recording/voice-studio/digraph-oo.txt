@@ -1,7 +1,8 @@
 # digraph-oo: /u/ as in moon
 # Say this: The long “oo” of “moon”: “oooo”.
 # Don't say this: Not the short “oo” of “book”.
+# Carrier: the model is near-silent on a lone phoneme, so the sound is spoken as "… as in moon" and cut out by make_clips.py.
 @gap 0
 @voice NARRATOR AJ
 
-[UW1]
+[UW1] as in moon.

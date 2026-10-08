@@ -2,7 +2,8 @@
 # Say this: A quick voiced tap behind the top teeth: “d”. Keep any “uh” tiny.
 # Don't say this: Not “dee”. Not “duh” with a long vowel.
 # Note: A stop sound can't be bare, so this is consonant + short schwa. The clipped 'uh' is expected; keep it as short as possible.
+# Carrier: the model is near-silent on a lone phoneme, so the sound is spoken as "… as in dog" and cut out by make_clips.py.
 @gap 0
 @voice NARRATOR AJ
 
-[D AH0]
+[D AH0] as in dog.

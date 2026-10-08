@@ -2,7 +2,8 @@
 # Say this: A buzzing “zzzzz”, like a bee.
 # Don't say this: Not the letter name “zee”.
 # Note: A bare consonant isn't allowed (every group needs a vowel), so this is consonant + short schwa. The sound should be held; if the 'uh' is audible, trim it in the editor.
+# Carrier: the model is near-silent on a lone phoneme, so the sound is spoken as "… as in zebra" and cut out by make_clips.py.
 @gap 0
 @voice NARRATOR AJ
 
-[Z AH0]
+[Z AH0] as in zebra.

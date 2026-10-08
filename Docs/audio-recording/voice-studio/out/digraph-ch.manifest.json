@@ -1,0 +1,17 @@
+{
+  "output": "/Users/ajoberlender1/Desktop/Recordings for kids app/digraph-ch.mp3",
+  "segments": [
+    {
+      "index": 0,
+      "identity": "ee02e1b2d8efd6e98bea",
+      "seed": 0,
+      "voice": "AJ",
+      "speaker": "NARRATOR",
+      "chapter": null,
+      "text": "[CH AH0]",
+      "gap_after": 0.0,
+      "wav": "fe24e64c426e2cf892a5.wav",
+      "duration": 1.6
+    }
+  ]
+}

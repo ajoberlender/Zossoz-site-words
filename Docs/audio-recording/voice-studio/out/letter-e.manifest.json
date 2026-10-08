@@ -1,0 +1,17 @@
+{
+  "output": "/Users/ajoberlender1/Desktop/Recordings for kids app/letter-e.mp3",
+  "segments": [
+    {
+      "index": 0,
+      "identity": "cc62afac720d0d202822",
+      "seed": 0,
+      "voice": "AJ",
+      "speaker": "NARRATOR",
+      "chapter": null,
+      "text": "[EH1]",
+      "gap_after": 0.0,
+      "wav": "41d33ccd50b6e268787c.wav",
+      "duration": 1.48
+    }
+  ]
+}

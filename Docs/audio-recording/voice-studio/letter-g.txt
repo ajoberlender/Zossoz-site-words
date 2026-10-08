@@ -2,7 +2,8 @@
 # Say this: The hard g, as at the start of “goat”: a quick “g”. Keep any “uh” tiny.
 # Don't say this: Not “jee”. Not the soft g (as in “giant”).
 # Note: A stop sound can't be bare, so this is consonant + short schwa. The clipped 'uh' is expected; keep it as short as possible.
+# Carrier: the model is near-silent on a lone phoneme, so the sound is spoken as "… as in goat" and cut out by make_clips.py.
 @gap 0
 @voice NARRATOR AJ
 
-[G AH0]
+[G AH0] as in goat.

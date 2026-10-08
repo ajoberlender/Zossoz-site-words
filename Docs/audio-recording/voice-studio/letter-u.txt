@@ -1,7 +1,8 @@
 # letter-u: /ʌ/ as in umbrella
 # Say this: Short u, as in “umbrella” or “cup”: “uh”.
 # Don't say this: Not the letter name “you”. Not “oo”.
+# Carrier: the model is near-silent on a lone phoneme, so the sound is spoken as "… as in umbrella" and cut out by make_clips.py.
 @gap 0
 @voice NARRATOR AJ
 
-[AH1]
+[AH1] as in umbrella.

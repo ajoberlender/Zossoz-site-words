@@ -2,7 +2,8 @@
 # Say this: Top teeth on the bottom lip with voice, a buzz: “vvvvv”.
 # Don't say this: Not the letter name “vee”.
 # Note: A bare consonant isn't allowed (every group needs a vowel), so this is consonant + short schwa. The sound should be held; if the 'uh' is audible, trim it in the editor.
+# Carrier: the model is near-silent on a lone phoneme, so the sound is spoken as "… as in violin" and cut out by make_clips.py.
 @gap 0
 @voice NARRATOR AJ
 
-[V AH0]
+[V AH0] as in violin.

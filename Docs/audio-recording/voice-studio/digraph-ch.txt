@@ -2,7 +2,8 @@
 # Say this: The sound at the start of “chip”, like a sneeze: a quick “ch”.
 # Don't say this: Not “kuh”. Not “sh”.
 # Note: A stop sound can't be bare, so this is consonant + short schwa. The clipped 'uh' is expected; keep it as short as possible.
+# Carrier: the model is near-silent on a lone phoneme, so the sound is spoken as "… as in chip" and cut out by make_clips.py.
 @gap 0
 @voice NARRATOR AJ
 
-[CH AH0]
+[CH AH0] as in chip.

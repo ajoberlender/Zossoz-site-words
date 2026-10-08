@@ -2,7 +2,8 @@
 # Say this: A breathy puff, like fogging a mirror: “h”.
 # Don't say this: Not the letter name “aitch”. Keep any “uh” tiny.
 # Note: HH only works before a full back vowel, so this is HH + AA1 ('hah'). Trim or re-record by hand if it sounds too much like a word.
+# Carrier: the model is near-silent on a lone phoneme, so the sound is spoken as "… as in hat" and cut out by make_clips.py.
 @gap 0
 @voice NARRATOR AJ
 
-[HH AA1]
+[HH AA1] as in hat.

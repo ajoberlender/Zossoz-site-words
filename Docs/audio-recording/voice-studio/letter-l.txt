@@ -2,7 +2,8 @@
 # Say this: Tongue tip behind the top teeth, voice on: “lllll”.
 # Don't say this: Not the letter name “el”.
 # Note: A bare consonant isn't allowed (every group needs a vowel), so this is consonant + short schwa. The sound should be held; if the 'uh' is audible, trim it in the editor.
+# Carrier: the model is near-silent on a lone phoneme, so the sound is spoken as "… as in lion" and cut out by make_clips.py.
 @gap 0
 @voice NARRATOR AJ
 
-[L AH0]
+[L AH0] as in lion.

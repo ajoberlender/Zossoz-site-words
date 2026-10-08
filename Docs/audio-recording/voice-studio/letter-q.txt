@@ -2,7 +2,8 @@
 # Say this: Always two sounds together: “k” + “w”, as at the start of “queen”: “kw”.
 # Don't say this: Not “queue”, not “kwoo”, not “qww”. Keep any “uh” tiny.
 # Note: A stop sound can't be bare, so this is consonant + short schwa. The clipped 'uh' is expected; keep it as short as possible.
+# Carrier: the model is near-silent on a lone phoneme, so the sound is spoken as "… as in queen" and cut out by make_clips.py.
 @gap 0
 @voice NARRATOR AJ
 
-[K W AH0]
+[K W AH0] as in queen.

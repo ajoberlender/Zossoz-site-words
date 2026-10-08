@@ -1,0 +1,17 @@
+{
+  "output": "/Users/ajoberlender1/Desktop/Recordings for kids app/letter-d.mp3",
+  "segments": [
+    {
+      "index": 0,
+      "identity": "c66c4f4a26291d04f9ff",
+      "seed": 0,
+      "voice": "AJ",
+      "speaker": "NARRATOR",
+      "chapter": null,
+      "text": "[D AH0]",
+      "gap_after": 0.0,
+      "wav": "cb005377aa16e8572783.wav",
+      "duration": 1.56
+    }
+  ]
+}

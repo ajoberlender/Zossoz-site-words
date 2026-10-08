@@ -1,7 +1,8 @@
 # digraph-ai: /eɪ/ as in train
 # Say this: Long a, as in “train”: “aaay”.
 # Don't say this: Not “eye”.
+# Carrier: the model is near-silent on a lone phoneme, so the sound is spoken as "… as in train" and cut out by make_clips.py.
 @gap 0
 @voice NARRATOR AJ
 
-[EY1]
+[EY1] as in train.

@@ -2,7 +2,8 @@
 # Say this: The sound at the start of “juice”: a quick “j” (“dj”). Keep any “uh” tiny.
 # Don't say this: Not “jay”.
 # Note: A stop sound can't be bare, so this is consonant + short schwa. The clipped 'uh' is expected; keep it as short as possible.
+# Carrier: the model is near-silent on a lone phoneme, so the sound is spoken as "… as in juice" and cut out by make_clips.py.
 @gap 0
 @voice NARRATOR AJ
 
-[JH AH0]
+[JH AH0] as in juice.

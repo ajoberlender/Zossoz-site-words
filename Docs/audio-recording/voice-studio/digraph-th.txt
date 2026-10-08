@@ -2,7 +2,8 @@
 # Say this: Tongue lightly between the teeth, blow air (no voice): “thhhhh”.
 # Don't say this: Not “t”. Not the voiced “th” of “this”.
 # Note: A bare consonant isn't allowed (every group needs a vowel), so this is consonant + short schwa. The sound should be held; if the 'uh' is audible, trim it in the editor.
+# Carrier: the model is near-silent on a lone phoneme, so the sound is spoken as "… as in thin" and cut out by make_clips.py.
 @gap 0
 @voice NARRATOR AJ
 
-[TH AH0]
+[TH AH0] as in thin.

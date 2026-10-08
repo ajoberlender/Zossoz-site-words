@@ -1,7 +1,8 @@
 # letter-e: /ɛ/ as in egg
 # Say this: Short e, as in “egg” or “bed”: “eh”.
 # Don't say this: Not the letter name “ee”.
+# Carrier: the model is near-silent on a lone phoneme, so the sound is spoken as "… as in egg" and cut out by make_clips.py.
 @gap 0
 @voice NARRATOR AJ
 
-[EH1]
+[EH1] as in egg.

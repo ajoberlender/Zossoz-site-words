@@ -1,0 +1,17 @@
+{
+  "output": "/Users/ajoberlender1/Desktop/Recordings for kids app/letter-p.mp3",
+  "segments": [
+    {
+      "index": 0,
+      "identity": "151e418bc60cb4e6ffb6",
+      "seed": 0,
+      "voice": "AJ",
+      "speaker": "NARRATOR",
+      "chapter": null,
+      "text": "[P AH0]",
+      "gap_after": 0.0,
+      "wav": "db662560c27f2c33042c.wav",
+      "duration": 1.56
+    }
+  ]
+}

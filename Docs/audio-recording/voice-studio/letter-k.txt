@@ -2,7 +2,8 @@
 # Say this: A quick “k” from the back of the throat, as at the start of “key”.
 # Don't say this: Not “koo”, not “kay”. Keep any “uh” tiny.
 # Note: A stop sound can't be bare, so this is consonant + short schwa. The clipped 'uh' is expected; keep it as short as possible.
+# Carrier: the model is near-silent on a lone phoneme, so the sound is spoken as "… as in key" and cut out by make_clips.py.
 @gap 0
 @voice NARRATOR AJ
 
-[K AH0]
+[K AH0] as in key.

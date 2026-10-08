@@ -1,0 +1,17 @@
+{
+  "output": "/Users/ajoberlender1/Desktop/Recordings for kids app/letter-r.mp3",
+  "segments": [
+    {
+      "index": 0,
+      "identity": "aeaf1236a7cfeb26f15f",
+      "seed": 0,
+      "voice": "AJ",
+      "speaker": "NARRATOR",
+      "chapter": null,
+      "text": "[R AH0]",
+      "gap_after": 0.0,
+      "wav": "6c3b69568bd5081f4d60.wav",
+      "duration": 1.56
+    }
+  ]
+}

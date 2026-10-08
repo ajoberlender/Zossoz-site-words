@@ -1,0 +1,17 @@
+{
+  "output": "/Users/ajoberlender1/Desktop/Recordings for kids app/letter-m.mp3",
+  "segments": [
+    {
+      "index": 0,
+      "identity": "efdc440617fa4f3c0707",
+      "seed": 0,
+      "voice": "AJ",
+      "speaker": "NARRATOR",
+      "chapter": null,
+      "text": "[M AH0]",
+      "gap_after": 0.0,
+      "wav": "b8f56e20b6305756e7a6.wav",
+      "duration": 1.56
+    }
+  ]
+}

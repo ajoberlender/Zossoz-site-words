@@ -1,0 +1,17 @@
+{
+  "output": "/Users/ajoberlender1/Desktop/Recordings for kids app/letter-g.mp3",
+  "segments": [
+    {
+      "index": 0,
+      "identity": "6b2731b144b33c784f4c",
+      "seed": 0,
+      "voice": "AJ",
+      "speaker": "NARRATOR",
+      "chapter": null,
+      "text": "[G AH0]",
+      "gap_after": 0.0,
+      "wav": "8bdaecca27ad4bbe3254.wav",
+      "duration": 1.56
+    }
+  ]
+}

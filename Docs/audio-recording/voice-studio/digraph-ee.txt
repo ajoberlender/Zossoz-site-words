@@ -1,7 +1,8 @@
 # digraph-ee: /i/ as in bee
 # Say this: Long e, as in “bee”: “eeeee”.
 # Don't say this: Not the letter name stretched (“ee” is the same, just clean and held).
+# Carrier: the model is near-silent on a lone phoneme, so the sound is spoken as "… as in bee" and cut out by make_clips.py.
 @gap 0
 @voice NARRATOR AJ
 
-[IY1]
+[IY1] as in bee.

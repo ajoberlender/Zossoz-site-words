@@ -1,0 +1,17 @@
+{
+  "output": "/Users/ajoberlender1/Desktop/Recordings for kids app/letter-h.mp3",
+  "segments": [
+    {
+      "index": 0,
+      "identity": "6710d3a5a584e9f4054c",
+      "seed": 0,
+      "voice": "AJ",
+      "speaker": "NARRATOR",
+      "chapter": null,
+      "text": "[HH AA1]",
+      "gap_after": 0.0,
+      "wav": "cdbf2eab2c68525566fa.wav",
+      "duration": 1.6
+    }
+  ]
+}
