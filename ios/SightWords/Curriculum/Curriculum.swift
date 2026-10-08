@@ -101,6 +101,11 @@ enum Curriculum {
         ("The Red Hen", "I see a red hen. The hen is in a pen. She can run and she can sit. The hen has ten eggs. Look at the eggs! They are in the sun."),
         ("Fish and Ship", "Tim and Dan go to the sea. They see a ship. The ship is big. Tim has a fish in his dish. Dan said, I wish I had a fish. Then Tim said, you can have this one."),
         ("The Duck", "A duck sat on a log. The duck went quack, quack. A frog came to play. They had fun. Then the rain came down. The duck and the frog ran to the shed."),
+        ("The Pond", "We go to the pond. A frog sits on a log. It will jump in the water. Two ducks swim by. They said quack. We like the pond. It is a good place to play."),
+        ("A Trip to the Shop", "Mom and I go to the shop. We get some milk and a red apple. I help put the bag in the car. Then we ride home. I think we had a good trip."),
+        ("The Little Bird", "A little bird sat in a tree. It saw a worm on the ground. The bird flew down and got it. Then it went back up. Soon the bird will sing for us."),
+        ("Ben and the Dog", "Ben has a dog. The dog is brown and white. Ben likes to take the dog for a walk. They run and jump in the park. When they get home, the dog drinks some water and takes a nap."),
+        ("Rain Day", "It is a rain day. We can not go out to play. So we make a fort with a big sheet. We read books in the fort. Then the sun came out and we ran outside!"),
         ("My Day", "I get up. I see the sun. We eat and then we play. Mom said, please help me, and I did. We went to the park and we saw a big dog. It was a good day."),
     ]
 
@@ -127,6 +132,38 @@ enum Curriculum {
     }()
 
     static let byKey: [String: Item] = Dictionary(uniqueKeysWithValues: all.map { ($0.key, $0) })
+
+    // MARK: Reading levels — placement test and flashcard decks
+    static let levels: [Stage] = [
+        Stage(id: 1, title: "Letter sounds", blurb: "The sound each letter makes", emoji: "🔤"),
+        Stage(id: 2, title: "Digraphs", blurb: "sh, ch, th, ee and friends", emoji: "🤝"),
+        Stage(id: 3, title: "Sound-it-out words", blurb: "Short words like cat and sun", emoji: "🧩"),
+        Stage(id: 4, title: "Digraph words", blurb: "Words like ship, duck and rain", emoji: "🐑"),
+        Stage(id: 5, title: "First sight words", blurb: "the, and, you, can…", emoji: "👀"),
+        Stage(id: 6, title: "More sight words", blurb: "said, want, they, were…", emoji: "🌟"),
+        Stage(id: 7, title: "Grade 1 words", blurb: "could, think, every, thank…", emoji: "🚀"),
+    ]
+
+    /// Items for each level, in `levels` order.
+    static let testLevels: [[Item]] = {
+        func words(_ list: [String]) -> [Item] { list.compactMap { byKey["sight_word:\($0)"] } }
+        let pre = Set(prePrimer), pri = Set(primer)
+        return [
+            items(inStage: 1), items(inStage: 2), items(inStage: 3), items(inStage: 4),
+            words(prePrimer),
+            words(primer.filter { !pre.contains($0) }),
+            words(grade1.filter { !pre.contains($0) && !pri.contains($0) }),
+        ]
+    }()
+
+    /// item key → level (1...7)
+    static let levelByKey: [String: Int] = {
+        var m: [String: Int] = [:]
+        for (i, level) in testLevels.enumerated() { for it in level { m[it.key] = i + 1 } }
+        return m
+    }()
+
+    static let sentences: [Item] = items(inStage: 7)
     static func items(inStage stage: Int) -> [Item] { all.filter { $0.stage == stage } }
     static let passages: [Item] = all.filter { $0.kind == .passage }
 

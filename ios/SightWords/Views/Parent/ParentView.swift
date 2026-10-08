@@ -12,6 +12,7 @@ struct ParentView: View {
     @State private var coach: CoachNotes?
     @State private var coaching = false
     @State private var confirmDelete = false
+    @State private var showPlacement = false
     @AppStorage("preferTapMode") private var preferTap = false
     private let voices = SpeechService.availableVoices()
 
@@ -27,6 +28,7 @@ struct ParentView: View {
                     } footer: { Text("If one child read on another's profile, move that practice to the right reader.") }
                     progressSection(child)
                     troubleSection()
+                    placementSection(child)
                     learnerSection(child)
                     wordsSection(child)
                     aiSection(child)
@@ -34,6 +36,7 @@ struct ParentView: View {
                         Button("Delete \(child.name)…", role: .destructive) { confirmDelete = true }
                     } footer: { Text("Removes this reader and all of their progress, here and in the cloud.") }
                 }
+                .fullScreenCover(isPresented: $showPlacement) { PlacementTestView(childID: childID) }
                 .navigationTitle(child.name)
                 .navigationBarTitleDisplayMode(.inline)
                 .toolbar { ToolbarItem(placement: .confirmationAction) { Button("Done") { trimName(childID); dismiss() } } }
@@ -109,6 +112,19 @@ struct ParentView: View {
                     }
                 }
             }
+        }
+    }
+
+    private func placementSection(_ c: Child) -> some View {
+        Section {
+            if let p = c.placement {
+                LabeledContent("Reading level", value: p.level == 0 ? "Just starting" : Curriculum.levels[p.level - 1].title)
+                LabeledContent("Last checked", value: p.date.formatted(.relative(presentation: .named)))
+            }
+            Button(c.placement == nil ? "Take the reading level check…" : "Check again…") { showPlacement = true }
+            NavigationLink("Flashcard lists") { FlashcardListsView() }
+        } header: { Text("Level & flashcards") } footer: {
+            Text("The level check takes about five minutes and decides which words stories can use. Retake it when they seem ready for more. Flashcard lists are your own word sets for every reader.")
         }
     }
 

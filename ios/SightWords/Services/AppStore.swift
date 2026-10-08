@@ -163,7 +163,7 @@ final class AppStore: ObservableObject {
         let prog = progress(for: childID)
         let items = Curriculum.items(inStage: c.currentStage)
         guard !items.isEmpty else { return false }
-        let solid = items.filter { (prog[$0.key]?.repetitions ?? 0) >= 2 }.count
+        let solid = items.filter { (prog[$0.key]?.repetitions ?? 0) >= 2 || c.placement?.knows($0) == true }.count
         guard Double(solid) / Double(items.count) >= 0.8 else { return false }
         c.currentStage += 1
         updateChild(c)
@@ -311,7 +311,7 @@ final class AppStore: ObservableObject {
             }
 
             // 4. Stars and streaks. Only flash-card answers earned stars.
-            let starEvents = events.filter { $0.grade >= Grade.good.rawValue && !PracticeSession.detailActivities.contains($0.activity) && $0.activity != "story" }
+            let starEvents = events.filter { $0.grade >= Grade.good.rawValue && !PracticeSession.detailActivities.contains($0.activity) && $0.activity != "story" && $0.activity != "flashcard" }
             let earned = starEvents.count
             let cal = Calendar.current
             if let si = s.children.firstIndex(where: { $0.id == source }) {
@@ -424,9 +424,10 @@ final class AppStore: ObservableObject {
 
     func masteredCount(childID: UUID, stage: Int) -> (mastered: Int, seen: Int, total: Int) {
         let prog = progress(for: childID)
+        let placement = child(childID)?.placement
         let items = Curriculum.items(inStage: stage)
         return (items.filter { prog[$0.key]?.mastered == true }.count,
-                items.filter { (prog[$0.key]?.repetitions ?? 0) > 0 }.count,
+                items.filter { (prog[$0.key]?.repetitions ?? 0) > 0 || placement?.knows($0) == true }.count,
                 items.count)
     }
 
@@ -441,10 +442,37 @@ final class AppStore: ObservableObject {
 
     /// Words the child has actually learned (used to constrain AI stories).
     func knownWords(childID: UUID) -> [String] {
-        progress(for: childID).values
+        var words = Set(progress(for: childID).values
             .filter { $0.repetitions >= 2 && ($0.itemType == "sight_word" || $0.itemType == "phonics_word") }
-            .compactMap { item(forKey: $0.itemKey, child: childID)?.text.lowercased() }
+            .compactMap { item(forKey: $0.itemKey, child: childID)?.text.lowercased() })
+        // A placement test vouches for every word up to the level passed, plus any word read correctly on it.
+        if let placement = child(childID)?.placement {
+            for it in Curriculum.all where it.isWord && placement.knows(it) { words.insert(it.text.lowercased()) }
+        }
+        return Array(words)
     }
+
+    /// Saves a placement test result, optionally moving practice to the matching stage.
+    func applyPlacement(childID: UUID, placement: Placement, moveStage: Bool) {
+        guard var c = child(childID) else { return }
+        c.placement = placement
+        if moveStage { c.currentStage = min(Placement.stage(afterPassing: placement.level), Curriculum.stages.count) }
+        updateChild(c)
+        Task { await sync() }
+    }
+
+    // MARK: Flashcard lists (account-wide, kept on this device)
+
+    var flashcardLists: [FlashcardList] { snap.flashcardLists.sorted { $0.date < $1.date } }
+
+    func saveFlashcardList(_ list: FlashcardList) {
+        mutate { s in
+            if let i = s.flashcardLists.firstIndex(where: { $0.id == list.id }) { s.flashcardLists[i] = list }
+            else { s.flashcardLists.append(list) }
+        }
+    }
+
+    func deleteFlashcardList(_ id: UUID) { mutate { $0.flashcardLists.removeAll { $0.id == id } } }
 }
 
 // MARK: - Sync

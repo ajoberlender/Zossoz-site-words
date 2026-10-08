@@ -31,9 +31,10 @@ enum SessionPlanner {
         // New items: current stage first, plus up to 2 parent-added words
         let room = max(3, child.dailyGoal - due.count)
         let newCount = min(room, 6)
-        var fresh = Curriculum.items(inStage: child.currentStage).filter { progress[$0.key] == nil }.prefix(newCount).map { $0 }
+        let isNew: (Item) -> Bool = { progress[$0.key] == nil && child.placement?.knows($0) != true }
+        var fresh = Curriculum.items(inStage: child.currentStage).filter(isNew).prefix(newCount).map { $0 }
         if fresh.count < 3 { // stage nearly done → peek at the next one so sessions never feel empty
-            fresh += Curriculum.items(inStage: child.currentStage + 1).filter { progress[$0.key] == nil }.prefix(3 - fresh.count)
+            fresh += Curriculum.items(inStage: child.currentStage + 1).filter(isNew).prefix(3 - fresh.count)
         }
         let customNew = store.customWords(for: child.id).map(Curriculum.customItem).filter { progress[$0.key] == nil }.prefix(2)
 

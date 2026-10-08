@@ -13,6 +13,43 @@ struct Child: Codable, Identifiable, Hashable {
     var lastPracticeDate: Date?
     var stars: Int = 0
     var dirty: Bool = true
+    /// Result of the latest placement test. Kept on this device.
+    var placement: Placement?
+}
+
+/// What a placement test found: the highest reading level passed, plus the individual cards answered.
+struct Placement: Codable, Hashable {
+    var level: Int                 // 0 = none, 1...7 = Curriculum.levels
+    var date: Date = Date()
+    var correct: Set<String> = []  // item keys read correctly during the test, at any level
+    var missed: Set<String> = []
+
+    /// Everything at or below the passed level is treated as known, plus anything read correctly on the test.
+    func knows(_ item: Item) -> Bool {
+        if correct.contains(item.key) { return true }
+        if let l = Curriculum.levelByKey[item.key] { return l <= level }
+        return false
+    }
+
+    /// Practice stage to start from after passing `level`.
+    static func stage(afterPassing level: Int) -> Int { [1, 2, 3, 4, 5, 6, 6, 7][min(max(level, 0), 7)] }
+}
+
+/// A parent-made list of words or sentences to practise as flashcards.
+struct FlashcardList: Codable, Identifiable, Hashable {
+    var id = UUID()
+    var name: String
+    var cards: [String]
+    var date: Date = Date()
+
+    /// One card per line; if there are no line breaks, commas separate the cards.
+    static func parse(_ raw: String) -> [String] {
+        let parts = raw.contains("\n") ? raw.components(separatedBy: "\n") : raw.components(separatedBy: ",")
+        var seen = Set<String>()
+        return parts.map { $0.trimmingCharacters(in: .whitespacesAndNewlines) }
+            .filter { !$0.isEmpty && seen.insert($0.lowercased()).inserted }
+            .prefix(300).map { $0 }
+    }
 }
 
 struct ProgressRecord: Codable, Hashable {
@@ -103,6 +140,7 @@ struct LocalSnapshot: Codable {
     var history: [ReviewEvent] = []
     /// Permanent local log of passage reads (pendingAttempts is cleared after sync).
     var readingHistory: [PassageAttempt] = []
+    var flashcardLists: [FlashcardList] = []
 
     init() {}
 
@@ -118,5 +156,6 @@ struct LocalSnapshot: Codable {
         stories = try c.decodeIfPresent([GeneratedStory].self, forKey: .stories) ?? []
         history = try c.decodeIfPresent([ReviewEvent].self, forKey: .history) ?? []
         readingHistory = try c.decodeIfPresent([PassageAttempt].self, forKey: .readingHistory) ?? []
+        flashcardLists = try c.decodeIfPresent([FlashcardList].self, forKey: .flashcardLists) ?? []
     }
 }

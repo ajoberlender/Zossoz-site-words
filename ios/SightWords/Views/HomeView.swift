@@ -5,6 +5,7 @@ struct HomeView: View {
     @EnvironmentObject var store: AppStore
     @State private var playing = false
     @State private var showStories = false
+    @State private var showFlashcards = false
     @State private var showGate = false
     @State private var showParent = false
     @State private var gatePassed = false
@@ -19,8 +20,9 @@ struct HomeView: View {
                     BigButton(title: "Let's read!", systemImage: "play.fill", color: Theme.mint) { playing = true }
                     HStack(spacing: 14) {
                         BigButton(title: "Stories", systemImage: "book.fill", color: Theme.sun, textColor: Theme.onSun) { showStories = true }
-                        BigButton(title: "Grown-ups", systemImage: "lock.fill", color: Theme.slate) { showGate = true }
+                        BigButton(title: "Flashcards", systemImage: "rectangle.stack.fill", color: Theme.grape) { showFlashcards = true }
                     }
+                    BigButton(title: "Grown-ups", systemImage: "lock.fill", color: Theme.slate) { showGate = true }
                     stageMap(child)
                 }
                 .padding(20)
@@ -31,6 +33,7 @@ struct HomeView: View {
             .navigationBarTitleDisplayMode(.inline)
             .fullScreenCover(isPresented: $playing) { SessionView(childID: childID) }
             .fullScreenCover(isPresented: $showStories) { StoriesView(childID: childID) }
+            .fullScreenCover(isPresented: $showFlashcards) { FlashcardsView(childID: childID) }
             .sheet(isPresented: $showGate, onDismiss: {
                 if gatePassed { gatePassed = false; showParent = true }
             }) { GrownUpGate { gatePassed = true } }

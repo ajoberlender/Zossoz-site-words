@@ -73,7 +73,8 @@ final class AIService: ObservableObject {
     // MARK: Story maker
 
     /// Writes a short decodable story using (mostly) words the child already knows.
-    func makeStory(childName: String, known: [String], theme: String) async -> StoryDraft {
+    /// `recentlyRead` (passage key → when it was last read) steers the library fallback toward stories not read yet.
+    func makeStory(childName: String, known: [String], theme: String, recentlyRead: [String: Date] = [:]) async -> StoryDraft {
         let allowed = Set(known.map { $0.lowercased() } + Curriculum.alwaysAllowed.map { $0.lowercased() }
                           + Self.tokens(childName) + Self.tokens(theme))
         #if canImport(FoundationModels)
@@ -92,14 +93,15 @@ final class AIService: ObservableObject {
             if let best, best.offListWords.count <= 3 { return best }
         }
         #endif
-        return fallbackStory(allowed: allowed)
+        return fallbackStory(allowed: allowed, theme: theme, recentlyRead: recentlyRead)
     }
 
     #if canImport(FoundationModels)
     @available(iOS 26.0, *)
     private func generateStory(childName: String, known: [String], theme: String) async throws -> StoryOutput {
         // Keep the prompt small: the context window is shared between input and output.
-        let words = Array(Set(known.map { $0.lowercased() })).sorted().prefix(150).joined(separator: ", ")
+        // A random sample, so a bigger vocabulary gives different stories (alphabetical would always start at "a").
+        let words = Array(Set(known.map { $0.lowercased() })).shuffled().prefix(150).joined(separator: ", ")
         let instructions = """
         You write tiny, cheerful stories for a five-year-old who is just learning to read.
         Use ONLY simple words from the allowed word list, plus the child's name and the words in the theme.
@@ -120,9 +122,19 @@ final class AIService: ObservableObject {
     #endif
 
     /// Picks the built-in passage that best matches what the child can already read.
-    private func fallbackStory(allowed: Set<String>) -> StoryDraft {
+    /// Among the stories the child can mostly read, prefer one they haven't read (or read longest ago),
+    /// then one that mentions the theme, then the one with the fewest unfamiliar words.
+    private func fallbackStory(allowed: Set<String>, theme: String, recentlyRead: [String: Date]) -> StoryDraft {
         let scored = Curriculum.passages.map { p -> (Item, [String]) in (p, Self.offList(p.text, allowed: allowed)) }
-        let best = scored.min { $0.1.count < $1.1.count } ?? scored[0]
+        let fewest = scored.map { $0.1.count }.min() ?? 0
+        let readable = scored.filter { $0.1.count <= max(fewest, 2) }
+        let noun = Self.tokens(theme).filter { !["a", "an", "the"].contains($0) }
+        func rank(_ s: (Item, [String])) -> (Int, Date, Int, Int) {
+            let text = s.0.text.lowercased()
+            return (recentlyRead[s.0.key] == nil ? 0 : 1, recentlyRead[s.0.key] ?? .distantPast,
+                    noun.contains { text.contains($0) } ? 0 : 1, s.1.count)
+        }
+        let best = (readable.isEmpty ? scored : readable).min { rank($0) < rank($1) } ?? scored[0]
         return StoryDraft(title: best.0.title ?? "A Story", body: best.0.text, offListWords: best.1, usedAI: false)
     }
 

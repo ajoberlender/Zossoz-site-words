@@ -90,7 +90,10 @@ struct StoriesView: View {
         guard let child else { return }
         making = true
         defer { making = false }
-        let draft = await ai.makeStory(childName: child.name, known: store.knownWords(childID: childID), theme: theme)
+        var lastRead: [String: Date] = [:]
+        for a in store.readingAttempts(for: childID) where lastRead[a.passageKey] == nil { lastRead[a.passageKey] = a.date } // newest first
+        let draft = await ai.makeStory(childName: child.name, known: store.knownWords(childID: childID), theme: theme,
+                                       recentlyRead: lastRead)
         if draft.usedAI {
             let s = GeneratedStory(childID: childID, title: draft.title, body: draft.body)
             store.saveStory(s)
