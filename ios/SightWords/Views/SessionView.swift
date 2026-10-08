@@ -165,10 +165,6 @@ private struct SessionSummary: View {
     let stars: Int
     let empty: Bool
     var onClose: () -> Void
-    @EnvironmentObject var store: AppStore
-    @State private var showGate = false
-    @State private var gatePassed = false
-    @State private var showChoice = false
 
     var body: some View {
         VStack(spacing: 20) {
@@ -179,24 +175,8 @@ private struct SessionSummary: View {
             else { Text("Come back later — your words need a little rest.").multilineTextAlignment(.center).foregroundStyle(.secondary) }
             Spacer()
             BigButton(title: "Done", color: Theme.mint, action: onClose).padding(.horizontal, 32)
-            if !empty, let name = store.child(childID)?.name, store.children.count > 1 {
-                Button("Wasn't \(name)? Move this practice…") { showGate = true }
-                    .font(.callout)
-            }
+            if !empty { WrongReaderButton(childID: childID, onMoved: onClose) }
         }
         .padding()
-        .sheet(isPresented: $showGate, onDismiss: {
-            if gatePassed { gatePassed = false; showChoice = true }
-        }) { GrownUpGate { gatePassed = true } }
-        .confirmationDialog("Who was actually reading?", isPresented: $showChoice, titleVisibility: .visible) {
-            ForEach(store.children.filter { $0.id != childID }) { other in
-                Button("\(other.avatar) \(other.name)") {
-                    if let latest = store.practiceSessions(for: childID, limit: 1).first {
-                        store.reassign([latest], from: childID, to: other.id)
-                    }
-                    onClose()
-                }
-            }
-        } message: { Text("This session's progress and stars move to them.") }
     }
 }

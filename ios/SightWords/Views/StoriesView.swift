@@ -119,6 +119,7 @@ private struct StoryReader: View {
                             .bigFont(30).multilineTextAlignment(.center)
                         Spacer()
                         BigButton(title: "Done", color: Theme.mint) { dismiss() }.padding(.horizontal, 32)
+                        WrongReaderButton(childID: childID, onMoved: { dismiss() })
                     }
                     .padding()
                 } else {

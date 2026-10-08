@@ -244,10 +244,20 @@ final class AppStore: ObservableObject {
         mutate { s in
             // 1. Rewind the source reader's progress for every item touched.
             for key in keys {
-                guard let first = events.first(where: { $0.itemKey == key }), let undo = first.undo,
+                guard let first = events.first(where: { $0.itemKey == key }),
                       let cur = s.progress.firstIndex(where: { $0.childID == source && $0.itemKey == key }) else { continue }
                 let current = s.progress[cur]
-                var base = undo.previous ?? ProgressRecord(childID: source, itemKey: key, itemType: current.itemType, stage: current.stage)
+                var base: ProgressRecord
+                if let undo = first.undo {
+                    base = undo.previous ?? ProgressRecord(childID: source, itemKey: key, itemType: current.itemType, stage: current.stage)
+                } else {
+                    // Logged before undo snapshots existed. If every review of this item on record is part of
+                    // what's being moved, nothing came before it, so it goes back to unseen. Otherwise leave it.
+                    let mine = events.filter { $0.itemKey == key }.count
+                    let all = s.history.filter { $0.childID == source && $0.itemKey == key }.count
+                    guard all == mine, current.repetitions + current.lapses <= mine else { continue }
+                    base = ProgressRecord(childID: source, itemKey: key, itemType: current.itemType, stage: current.stage)
+                }
                 base.serverID = current.serverID
                 // Replay what they genuinely did afterwards, refreshing each event's own "before" snapshot.
                 let later = s.history.enumerated()
@@ -327,7 +337,63 @@ final class AppStore: ObservableObject {
                 s.children[di] = c
             }
         }
-        Task { await sync() }
+        let sourceServerID = serverID(of: source)
+        let destServerID = dest.flatMap { serverID(of: $0) }
+        Task {
+            await sync()
+            // An upload that started before the move may still be in flight; let it land so the row can be found.
+            for _ in 0..<10 where syncing { try? await Task.sleep(nanoseconds: 500_000_000) }
+            await fixCloudAttempts(attempts, sourceServerID: sourceServerID, destServerID: destServerID, deleting: dest == nil)
+        }
+    }
+
+    /// The reads (stories, sentences) were already uploaded under the wrong reader; move or delete the cloud rows too.
+    private func fixCloudAttempts(_ attempts: [PassageAttempt], sourceServerID: Int?, destServerID: Int?, deleting: Bool) async {
+        guard client.token != nil, !attempts.isEmpty, let sourceServerID, deleting || destServerID != nil else { return }
+        guard var rows = try? await client.readAll("passage_attempts", query: ["child_id": String(sourceServerID)]) else { return }
+        for a in attempts {
+            guard let i = rows.firstIndex(where: { Self.sameRead($0, a) }), let id = rows[i].int("id") else { continue }
+            rows.remove(at: i)
+            if deleting { try? await client.delete("passage_attempts", id: id) }
+            else if let destServerID { try? await client.update("passage_attempts", id: id, ["child_id": destServerID]) }
+        }
+    }
+
+    private static func sameRead(_ row: [String: Any], _ a: PassageAttempt) -> Bool {
+        row.string("passage_key") == a.passageKey && (row.int("words_total") ?? 0) == a.wordsTotal
+            && (row.int("words_correct") ?? 0) == a.wordsCorrect && (row.int("duration_sec") ?? 0) == a.durationSec
+    }
+
+    /// Reads that were uploaded before the app kept a local reading log aren't on this device, so they couldn't be
+    /// listed or moved. This pulls them from the cloud into the log. Returns how many were added.
+    @discardableResult
+    func importCloudReads(for childID: UUID) async -> Int {
+        guard client.token != nil, let csid = serverID(of: childID),
+              let rows = try? await client.readAll("passage_attempts", query: ["child_id": String(csid)]) else { return 0 }
+        func key(_ k: String, _ t: Int, _ c: Int, _ d: Int) -> String { "\(k)|\(t)|\(c)|\(d)" }
+        var have: [String: Int] = [:]
+        for a in snap.readingHistory where a.childID == childID {
+            have[key(a.passageKey, a.wordsTotal, a.wordsCorrect, a.durationSec), default: 0] += 1
+        }
+        var added: [PassageAttempt] = []
+        for row in rows.sorted(by: { ($0.int("id") ?? 0) < ($1.int("id") ?? 0) }) {
+            guard let pk = row.string("passage_key"), let id = row.int("id") else { continue }
+            let total = row.int("words_total") ?? 0, correct = row.int("words_correct") ?? 0, dur = row.int("duration_sec") ?? 0
+            let k = key(pk, total, correct, dur)
+            if let n = have[k], n > 0 { have[k] = n - 1; continue }
+            // Prefer a real timestamp; otherwise order by row id and mark as long ago ("date unknown").
+            let date = row.date("created_at") ?? row.date("createdAt") ?? row.date("updated_at")
+                ?? Date(timeIntervalSince1970: Double(id) * 3600)
+            let missed = (row.string("missed_words") ?? "").split(separator: ",").map(String.init)
+            added.append(PassageAttempt(childID: childID, passageKey: pk, wordsTotal: total, wordsCorrect: correct,
+                                        durationSec: dur, missedWords: missed, date: date))
+        }
+        guard !added.isEmpty else { return 0 }
+        mutate { s in
+            s.readingHistory.append(contentsOf: added)
+            s.readingHistory.sort { $0.date < $1.date }
+        }
+        return added.count
     }
 
     // MARK: Custom words & stories

@@ -1,5 +1,36 @@
 import SwiftUI
 
+/// "Wasn't Maya?" — behind the grown-up gate, moves the reader's most recent practice to someone else.
+/// Used on the finish screens after flashcards and after a story.
+struct WrongReaderButton: View {
+    let childID: UUID
+    var onMoved: () -> Void
+    @EnvironmentObject var store: AppStore
+    @State private var showGate = false
+    @State private var gatePassed = false
+    @State private var showChoice = false
+
+    var body: some View {
+        if let name = store.child(childID)?.name, store.children.count > 1 {
+            Button("Wasn't \(name)? Move this practice…") { showGate = true }
+                .font(.callout)
+                .sheet(isPresented: $showGate, onDismiss: {
+                    if gatePassed { gatePassed = false; showChoice = true }
+                }) { GrownUpGate { gatePassed = true } }
+                .confirmationDialog("Who was actually reading?", isPresented: $showChoice, titleVisibility: .visible) {
+                    ForEach(store.children.filter { $0.id != childID }) { other in
+                        Button("\(other.avatar) \(other.name)") {
+                            if let latest = store.practiceSessions(for: childID, limit: 1).first {
+                                store.reassign([latest], from: childID, to: other.id)
+                            }
+                            onMoved()
+                        }
+                    }
+                } message: { Text("This practice, its progress and stars move to them.") }
+        }
+    }
+}
+
 /// Lists a reader's recent practice sessions so a grown-up can move one that was filed under the
 /// wrong reader to the right one (or delete it).
 struct PracticeLogView: View {
@@ -29,6 +60,7 @@ struct PracticeLogView: View {
                 }
             }
         }
+        .task { _ = await store.importCloudReads(for: childID) }
         .navigationTitle("Practice log")
         .navigationBarTitleDisplayMode(.inline)
         .toolbar {
@@ -67,6 +99,12 @@ struct PracticeLogView: View {
         return "Move \(chosen.count) session\(chosen.count == 1 ? "" : "s") (\(cards) cards) from \(name) to \(moveTo?.name ?? "…")?"
     }
 
+    private static func when(_ s: AppStore.PracticeSession) -> String {
+        s.start < Date(timeIntervalSince1970: 946_684_800) // before 2000 = imported from the cloud without a date
+            ? "Earlier read (date unknown)"
+            : s.start.formatted(date: .abbreviated, time: .shortened)
+    }
+
     private func row(_ session: AppStore.PracticeSession) -> some View {
         let on = selected.contains(session.id)
         let cards = session.cards
@@ -76,7 +114,10 @@ struct PracticeLogView: View {
         let stories = session.attempts.count
         var parts: [String] = []
         if !cards.isEmpty { parts.append("\(cards.count) card\(cards.count == 1 ? "" : "s")") }
-        if stories > 0 { parts.append("\(stories) read-aloud\(stories == 1 ? "" : "s")") }
+        if stories > 0 {
+            let titles = session.attempts.map { store.passageTitle($0.passageKey) }
+            parts.append(stories == 1 ? "read “\(titles[0])”" : "\(stories) read-alouds")
+        }
         let summary = parts.joined(separator: " · ")
         return Button {
             if on { selected.remove(session.id) } else { selected.insert(session.id) }
@@ -86,7 +127,7 @@ struct PracticeLogView: View {
                     .font(.title3)
                     .foregroundStyle(on ? Theme.grape : .secondary)
                 VStack(alignment: .leading, spacing: 2) {
-                    Text(session.start.formatted(date: .abbreviated, time: .shortened)).font(.headline)
+                    Text(Self.when(session)).font(.headline)
                     Text(summary).font(.subheadline).foregroundStyle(.secondary)
                     if !preview.isEmpty { Text(preview).font(.caption).foregroundStyle(.secondary).lineLimit(1) }
                 }
@@ -96,7 +137,7 @@ struct PracticeLogView: View {
         }
         .buttonStyle(.plain)
         .accessibilityElement(children: .combine)
-        .accessibilityLabel("\(session.start.formatted(date: .abbreviated, time: .shortened)), \(summary)")
+        .accessibilityLabel("\(Self.when(session)), \(summary)")
         .accessibilityAddTraits(on ? [.isButton, .isSelected] : .isButton)
     }
 }
