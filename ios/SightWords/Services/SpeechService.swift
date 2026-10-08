@@ -74,6 +74,28 @@ final class SpeechService: NSObject, ObservableObject, AVSpeechSynthesizerDelega
         await speak(word, child: child, rate: rate)
     }
 
+    /// After a wrong tap: "Try again. That's <word>." — or, for a letter or digraph,
+    /// "Try again. That's <sound>, like in <example word>." so they learn what they tapped.
+    func speakWrongAnswer(tapped: Item, child: Child?) async {
+        await speak("Try again.", child: child)
+        if Task.isCancelled { return }
+        try? await Task.sleep(nanoseconds: 200_000_000)
+        if Task.isCancelled { return }
+        guard tapped.isSound else {
+            await speak("That's \(tapped.say).", child: child)
+            return
+        }
+        await speak("That's", child: child)
+        if Task.isCancelled { return }
+        await speakSound(tapped, child: child, withExample: false)
+        guard !Task.isCancelled, let word = Self.exampleWord(for: tapped) else { return }
+        try? await Task.sleep(nanoseconds: 200_000_000)
+        if Task.isCancelled { return }
+        await speak("like in", child: child)
+        if Task.isCancelled { return }
+        await speak(word, child: child)
+    }
+
     private static func exampleWord(for item: Item) -> String? {
         if item.kind == .digraph { return item.hint?.replacingOccurrences(of: "as in ", with: "") }
         return exampleWords[item.text]

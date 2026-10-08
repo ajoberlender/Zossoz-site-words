@@ -12,6 +12,7 @@ struct ListenPickActivity: View {
     @State private var replays = 0
     @State private var started = Date()
     @State private var finished = false
+    @State private var feedback: Task<Void, Never>?
 
     var body: some View {
         VStack(spacing: 28) {
@@ -56,11 +57,13 @@ struct ListenPickActivity: View {
         let ms = Int(Date().timeIntervalSince(started) * 1000)
         if c.key == item.key {
             finished = true
+            feedback?.cancel()
             let grade: Grade = !wrong.isEmpty ? .missed : ((replays == 0 && ms < 4000) ? .easy : .good)
             done(grade, replays > 0, ms, nil)
         } else {
             wrong.insert(c.key)
-            Task { await SpeechService.shared.speak("Try again", child: child) }
+            feedback?.cancel()
+            feedback = Task { await SpeechService.shared.speakWrongAnswer(tapped: c, child: child) }
         }
     }
 }
