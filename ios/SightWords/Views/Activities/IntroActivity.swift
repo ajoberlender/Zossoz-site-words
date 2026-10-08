@@ -11,9 +11,9 @@ struct IntroActivity: View {
         VStack(spacing: 24) {
             Text("New!").font(.title2.bold()).foregroundStyle(Theme.grape)
             Spacer()
-            if let e = item.emoji { Text(e).font(.system(size: 80)) }
+            if let e = item.emoji { Text(e).font(.system(size: 80)).accessibilityHidden(true) }
             Text(item.isSound ? "\(item.text.uppercased())\(item.text)" : item.text)
-                .font(Theme.big(item.text.count > 5 ? 72 : 110))
+                .bigFont(item.text.count > 5 ? 72 : 110)
                 .foregroundStyle(Theme.ink)
                 .minimumScaleFactor(0.4)
             if let hint = item.hint {
@@ -28,7 +28,7 @@ struct IntroActivity: View {
                     } label: {
                         Label("Sound it out", systemImage: "tortoise.fill").font(.title3.bold())
                             .padding(.horizontal, 20).frame(height: 84)
-                            .background(Theme.sun, in: Capsule()).foregroundStyle(Theme.ink)
+                            .background(Theme.sun, in: Capsule()).foregroundStyle(Theme.onSun)
                     }
                 }
             }

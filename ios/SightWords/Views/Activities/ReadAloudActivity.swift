@@ -8,6 +8,7 @@ struct ReadAloudActivity: View {
     let done: ActivityDone
 
     @ObservedObject private var listener = ListeningService.shared
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
     @State private var helped = false
     @State private var started = Date()
     @State private var heardText: String?
@@ -19,8 +20,8 @@ struct ReadAloudActivity: View {
         VStack(spacing: 24) {
             Text(item.isSound ? "Say the sound" : "Read it out loud").font(.title2.bold()).foregroundStyle(Theme.ink)
             Spacer()
-            if let e = item.emoji, helped { Text(e).font(.system(size: 60)) }
-            Text(item.text).font(Theme.big(item.text.count > 5 ? 72 : 120)).foregroundStyle(Theme.ink).minimumScaleFactor(0.4)
+            if let e = item.emoji, helped { Text(e).font(.system(size: 60)).accessibilityHidden(true) }
+            Text(item.text).bigFont(item.text.count > 5 ? 72 : 120).foregroundStyle(Theme.ink).minimumScaleFactor(0.4)
 
             if let heardText, !heardText.isEmpty {
                 Text("I heard “\(heardText)”").font(.title3).foregroundStyle(.secondary)
@@ -40,9 +41,9 @@ struct ReadAloudActivity: View {
                             .font(.system(size: 34, weight: .bold)).foregroundStyle(.white)
                             .frame(width: 80, height: 80)
                             .background(listener.isListening ? Theme.coral : Theme.mint, in: Circle())
-                            .symbolEffect(.pulse, isActive: listener.isListening)
+                            .symbolEffect(.pulse, isActive: listener.isListening && !reduceMotion)
                     }
-                    .accessibilityLabel("Read to me")
+                    .accessibilityLabel(listener.isListening ? "Listening" : "Read to me")
                 }
             }
             HStack(spacing: 14) {

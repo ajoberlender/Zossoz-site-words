@@ -13,7 +13,7 @@ struct AuthView: View {
         ScrollView {
             VStack(spacing: 20) {
                 Text("📚").font(.system(size: 80))
-                Text("Sight Words").font(Theme.big(40))
+                Text("Sight Words").bigFont(40)
                 Text("A grown-up signs in once. Your readers keep their progress across devices.")
                     .multilineTextAlignment(.center).foregroundStyle(.secondary)
 

@@ -1,21 +1,50 @@
 import SwiftUI
 
 enum Theme {
-    static let sky = Color(red: 0.93, green: 0.97, blue: 1.0)
+    /// A colour that switches between appearances.
+    static func dynamic(light: (Double, Double, Double), dark: (Double, Double, Double)) -> Color {
+        Color(uiColor: UIColor { trait in
+            let c = trait.userInterfaceStyle == .dark ? dark : light
+            return UIColor(red: c.0, green: c.1, blue: c.2, alpha: 1)
+        })
+    }
+
+    // Surfaces — these adapt to light/dark.
+    static let sky = dynamic(light: (0.93, 0.97, 1.0), dark: (0.09, 0.09, 0.17))
+    static let skyBottom = dynamic(light: (1, 1, 1), dark: (0.04, 0.04, 0.09))
+    /// Cards, tiles and answer buttons.
+    static let card = dynamic(light: (1, 1, 1), dark: (0.18, 0.18, 0.29))
+    /// Primary text on `card` / `sky`.
+    static let ink = dynamic(light: (0.14, 0.12, 0.25), dark: (0.95, 0.94, 1.0))
+
+    // Fills — each is dark/saturated enough for white text (≥ 4.5:1) in both appearances.
     static let grape = Color(red: 0.45, green: 0.30, blue: 0.85)
+    static let mint = Color(red: 0.04, green: 0.50, blue: 0.32)
+    static let coral = Color(red: 0.76, green: 0.19, blue: 0.19)
+    static let slate = Color(red: 0.33, green: 0.31, blue: 0.48)
+    /// Bright yellow highlight. Always pair with `onSun`, never with `ink`/white.
     static let sun = Color(red: 1.0, green: 0.80, blue: 0.25)
-    static let mint = Color(red: 0.25, green: 0.78, blue: 0.55)
-    static let coral = Color(red: 0.98, green: 0.42, blue: 0.40)
-    static let ink = Color(red: 0.14, green: 0.12, blue: 0.25)
+    static let onSun = Color(red: 0.14, green: 0.12, blue: 0.25)
     static let avatars = ["🦄", "🐼", "🦊", "🐸", "🐙", "🦋", "🐯", "🐰", "🐳", "🦉", "🐢", "🌈"]
 
-    static func big(_ size: CGFloat = 64) -> Font { .system(size: size, weight: .heavy, design: .rounded) }
+}
+
+/// Rounded display font that follows the user's Dynamic Type setting.
+private struct BigFont: ViewModifier {
+    @ScaledMetric private var size: CGFloat
+    var weight: Font.Weight
+    init(size: CGFloat, weight: Font.Weight) {
+        _size = ScaledMetric(wrappedValue: size, relativeTo: .title)
+        self.weight = weight
+    }
+    func body(content: Content) -> some View { content.font(.system(size: size, weight: weight, design: .rounded)) }
 }
 
 struct BigButton: View {
     let title: String
     var systemImage: String?
     var color: Color = Theme.grape
+    var textColor: Color = .white
     var action: () -> Void
 
     var body: some View {
@@ -24,8 +53,8 @@ struct BigButton: View {
                 if let systemImage { Image(systemName: systemImage) }
                 Text(title)
             }
-            .font(.system(size: 22, weight: .bold, design: .rounded))
-            .foregroundStyle(.white)
+            .bigFont(22, weight: .bold)
+            .foregroundStyle(textColor)
             .frame(maxWidth: .infinity, minHeight: 64)
             .background(color, in: RoundedRectangle(cornerRadius: 22, style: .continuous))
             .shadow(color: color.opacity(0.35), radius: 0, x: 0, y: 5)
@@ -48,6 +77,7 @@ struct SpeakerButton: View {
                 .shadow(color: Theme.grape.opacity(0.35), radius: 0, x: 0, y: 4)
         }
         .accessibilityLabel("Hear it")
+        .accessibilityHint("Reads it aloud")
     }
 }
 
@@ -81,7 +111,11 @@ struct FlowLayout: Layout {
 
 extension View {
     func screenBackground() -> some View {
-        background(LinearGradient(colors: [Theme.sky, .white], startPoint: .top, endPoint: .bottom).ignoresSafeArea())
+        background(LinearGradient(colors: [Theme.sky, Theme.skyBottom], startPoint: .top, endPoint: .bottom).ignoresSafeArea())
+    }
+
+    func bigFont(_ size: CGFloat, weight: Font.Weight = .heavy) -> some View {
+        modifier(BigFont(size: size, weight: weight))
     }
 }
 

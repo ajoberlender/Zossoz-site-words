@@ -22,7 +22,7 @@ struct TapAlongActivity: View {
 
     var body: some View {
         VStack(spacing: 20) {
-            if let title { Text(title).font(Theme.big(30)).foregroundStyle(Theme.ink) }
+            if let title { Text(title).bigFont(30).foregroundStyle(Theme.ink) }
             else { Text("Read the sentence").font(.title2.bold()).foregroundStyle(Theme.ink) }
             Text("Tap a word if you need help.").font(.callout).foregroundStyle(.secondary)
 
@@ -31,10 +31,12 @@ struct TapAlongActivity: View {
                     ForEach(Array(words.enumerated()), id: \.offset) { i, w in
                         let clean = Self.clean(w.text)
                         Text(w.text)
-                            .font(.system(size: 36, weight: .bold, design: .rounded))
-                            .foregroundStyle(Theme.ink)
+                            .bigFont(36, weight: .bold)
+                            .foregroundStyle(isSun(i, clean: clean) ? Theme.onSun : Theme.ink)
                             .padding(.horizontal, 8).padding(.vertical, 4)
                             .background(highlight(i, clean: clean), in: RoundedRectangle(cornerRadius: 10))
+                            .accessibilityAddTraits(.isButton)
+                            .accessibilityHint("Hears this word")
                             .onTapGesture {
                                 helped.insert(clean)
                                 tappedIndex = i
@@ -45,7 +47,7 @@ struct TapAlongActivity: View {
                 .padding()
                 .frame(maxWidth: .infinity, alignment: .leading)
             }
-            .background(.white, in: RoundedRectangle(cornerRadius: 24, style: .continuous))
+            .background(Theme.card, in: RoundedRectangle(cornerRadius: 24, style: .continuous))
             .padding(.horizontal)
 
             HStack(spacing: 14) {
@@ -65,10 +67,15 @@ struct TapAlongActivity: View {
         .onAppear { started = Date() }
     }
 
+    private func isSun(_ i: Int, clean: String) -> Bool {
+        if let r = speech.currentRange, NSIntersectionRange(r, words[i].range).length > 0 { return true }
+        return tappedIndex == i
+    }
+
     private func highlight(_ i: Int, clean: String) -> Color {
         if let r = speech.currentRange, NSIntersectionRange(r, words[i].range).length > 0 { return Theme.sun }
-        if tappedIndex == i { return Theme.sun.opacity(0.7) }
-        if helped.contains(clean) { return Theme.grape.opacity(0.12) }
+        if tappedIndex == i { return Theme.sun }
+        if helped.contains(clean) { return Theme.grape.opacity(0.25) }
         return .clear
     }
 

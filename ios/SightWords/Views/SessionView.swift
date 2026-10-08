@@ -71,6 +71,7 @@ struct SessionView: View {
 private struct SessionBody: View {
     @StateObject var model: SessionModel
     var onClose: () -> Void
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
 
     init(model: @autoclosure @escaping () -> SessionModel, onClose: @escaping () -> Void) {
         _model = StateObject(wrappedValue: model())
@@ -83,9 +84,13 @@ private struct SessionBody: View {
                 HStack {
                     Button { SpeechService.shared.stop(); onClose() } label: {
                         Image(systemName: "xmark.circle.fill").font(.title).foregroundStyle(.secondary)
+                            .frame(minWidth: 44, minHeight: 44)
                     }
+                    .accessibilityLabel("Close")
                     ProgressView(value: model.progress).tint(Theme.mint).scaleEffect(y: 2.2)
+                        .accessibilityLabel("Progress")
                     Text("⭐ \(model.stars)").font(.title3.bold())
+                        .accessibilityLabel("\(model.stars) stars")
                 }
                 .padding(.horizontal)
 
@@ -99,7 +104,11 @@ private struct SessionBody: View {
 
             if let fb = model.feedback { FeedbackBanner(grade: fb).transition(.scale.combined(with: .opacity)) }
         }
-        .animation(.spring(duration: 0.3), value: model.feedback != nil)
+        .animation(reduceMotion ? nil : .spring(duration: 0.3), value: model.feedback != nil)
+        .onChange(of: model.feedback) { _, fb in
+            // The banner is only on screen for about a second; make sure VoiceOver users hear it.
+            if let fb { UIAccessibility.post(notification: .announcement, argument: FeedbackBanner.message(for: fb)) }
+        }
         .screenBackground()
     }
 
@@ -130,13 +139,16 @@ private struct FeedbackBanner: View {
     let grade: Grade
     var body: some View {
         VStack(spacing: 8) {
-            Text(grade == .missed ? "🌱" : (grade == .easy ? "🌟" : "🎉")).font(.system(size: 90))
-            Text(grade == .missed ? "Let's try again soon!" : (grade == .hinted ? "Nice work!" : "Great reading!"))
-                .font(Theme.big(28)).foregroundStyle(Theme.ink)
+            Text(grade == .missed ? "🌱" : (grade == .easy ? "🌟" : "🎉")).font(.system(size: 90)).accessibilityHidden(true)
+            Text(Self.message(for: grade)).bigFont(28).foregroundStyle(Theme.ink)
         }
         .padding(32)
-        .background(.white, in: RoundedRectangle(cornerRadius: 32, style: .continuous))
+        .background(Theme.card, in: RoundedRectangle(cornerRadius: 32, style: .continuous))
         .shadow(radius: 20)
+    }
+
+    static func message(for grade: Grade) -> String {
+        grade == .missed ? "Let's try again soon!" : (grade == .hinted ? "Nice work!" : "Great reading!")
     }
 }
 
@@ -149,7 +161,7 @@ private struct SessionSummary: View {
         VStack(spacing: 20) {
             Spacer()
             Text(empty ? "🎈" : "🏆").font(.system(size: 110))
-            Text(empty ? "All caught up!" : "You did it!").font(Theme.big(40)).foregroundStyle(Theme.ink)
+            Text(empty ? "All caught up!" : "You did it!").bigFont(40).foregroundStyle(Theme.ink)
             if !empty { Text("You earned ⭐ \(stars)").font(.title.bold()) }
             else { Text("Come back later — your words need a little rest.").multilineTextAlignment(.center).foregroundStyle(.secondary) }
             Spacer()

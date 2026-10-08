@@ -18,8 +18,8 @@ struct HomeView: View {
                     header(child)
                     BigButton(title: "Let's read!", systemImage: "play.fill", color: Theme.mint) { playing = true }
                     HStack(spacing: 14) {
-                        BigButton(title: "Stories", systemImage: "book.fill", color: Theme.sun) { showStories = true }
-                        BigButton(title: "Grown-ups", systemImage: "lock.fill", color: Theme.ink.opacity(0.75)) { showGate = true }
+                        BigButton(title: "Stories", systemImage: "book.fill", color: Theme.sun, textColor: Theme.onSun) { showStories = true }
+                        BigButton(title: "Grown-ups", systemImage: "lock.fill", color: Theme.slate) { showGate = true }
                     }
                     stageMap(child)
                 }
@@ -42,10 +42,11 @@ struct HomeView: View {
 
     private func header(_ c: Child) -> some View {
         HStack(spacing: 16) {
-            Text(c.avatar).font(.system(size: 64))
+            Text(c.avatar).font(.system(size: 64)).accessibilityHidden(true)
             VStack(alignment: .leading, spacing: 4) {
-                Text("Hi, \(c.name)!").font(Theme.big(30)).foregroundStyle(Theme.ink)
+                Text("Hi, \(c.name)!").bigFont(30).foregroundStyle(Theme.ink)
                 Text("⭐ \(c.stars)   🔥 \(c.streakDays) day\(c.streakDays == 1 ? "" : "s")").font(.title3.bold()).foregroundStyle(.secondary)
+                    .accessibilityLabel("\(c.stars) stars, \(c.streakDays) day streak")
             }
             Spacer()
         }
@@ -57,7 +58,7 @@ struct HomeView: View {
                 let stat = store.masteredCount(childID: c.id, stage: stage.id)
                 let locked = stage.id > c.currentStage
                 HStack(spacing: 14) {
-                    Text(locked ? "🔒" : stage.emoji).font(.system(size: 36))
+                    Text(locked ? "🔒" : stage.emoji).font(.system(size: 36)).accessibilityHidden(true)
                     VStack(alignment: .leading, spacing: 4) {
                         Text(stage.title).font(.headline).foregroundStyle(Theme.ink)
                         Text(stage.blurb).font(.footnote).foregroundStyle(.secondary)
@@ -66,9 +67,10 @@ struct HomeView: View {
                     }
                 }
                 .padding(14)
-                .background(.white.opacity(locked ? 0.5 : 1), in: RoundedRectangle(cornerRadius: 20, style: .continuous))
+                .background(Theme.card, in: RoundedRectangle(cornerRadius: 20, style: .continuous))
                 .overlay(RoundedRectangle(cornerRadius: 20).stroke(stage.id == c.currentStage ? Theme.grape : .clear, lineWidth: 3))
-                .opacity(locked ? 0.7 : 1)
+                .accessibilityElement(children: .combine)
+                .accessibilityLabel("\(stage.title). \(locked ? "Locked." : (stage.id == c.currentStage ? "Current stage." : "")) \(stat.seen) of \(stat.total) seen")
             }
         }
     }

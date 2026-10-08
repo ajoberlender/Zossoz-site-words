@@ -116,7 +116,7 @@ private struct StoryReader: View {
                         Spacer()
                         Text(summary.helped == 0 ? "🏆" : "🌟").font(.system(size: 100))
                         Text(summary.helped == 0 ? "You read it all by yourself!" : "You read \(summary.total - summary.helped) of \(summary.total) words on your own!")
-                            .font(Theme.big(30)).multilineTextAlignment(.center)
+                            .bigFont(30).multilineTextAlignment(.center)
                         Spacer()
                         BigButton(title: "Done", color: Theme.mint) { dismiss() }.padding(.horizontal, 32)
                     }
@@ -125,7 +125,7 @@ private struct StoryReader: View {
                     VStack {
                         HStack {
                             Button { SpeechService.shared.stop(); dismiss() } label: {
-                                Image(systemName: "xmark.circle.fill").font(.title).foregroundStyle(.secondary)
+                                Image(systemName: "xmark.circle.fill").font(.title).foregroundStyle(.secondary).frame(minWidth: 44, minHeight: 44).accessibilityLabel("Close")
                             }
                             Spacer()
                         }

@@ -13,7 +13,7 @@ struct ChildPickerView: View {
         NavigationStack {
             ScrollView {
                 VStack(spacing: 24) {
-                    Text("Who's reading?").font(Theme.big(36)).padding(.top, 16)
+                    Text("Who's reading?").bigFont(36).padding(.top, 16)
                     LazyVGrid(columns: [GridItem(.adaptive(minimum: 160), spacing: 20)], spacing: 20) {
                         ForEach(store.children) { child in
                             Button { selected = child } label: {
@@ -22,8 +22,10 @@ struct ChildPickerView: View {
                                     Text(child.name).font(.title2.bold()).foregroundStyle(Theme.ink)
                                     Text("⭐ \(child.stars)  🔥 \(child.streakDays)").font(.callout).foregroundStyle(.secondary)
                                 }
+                                .accessibilityElement(children: .combine)
+                                .accessibilityLabel("\(child.name), \(child.stars) stars, \(child.streakDays) day streak")
                                 .frame(maxWidth: .infinity).padding(.vertical, 20)
-                                .background(.white, in: RoundedRectangle(cornerRadius: 28, style: .continuous))
+                                .background(Theme.card, in: RoundedRectangle(cornerRadius: 28, style: .continuous))
                                 .shadow(color: .black.opacity(0.08), radius: 8, y: 4)
                             }
                             .buttonStyle(.plain)
@@ -34,7 +36,8 @@ struct ChildPickerView: View {
                                 Text("Add a reader").font(.headline).foregroundStyle(Theme.ink)
                             }
                             .frame(maxWidth: .infinity, minHeight: 190)
-                            .background(.white.opacity(0.6), in: RoundedRectangle(cornerRadius: 28, style: .continuous))
+                            .background(Theme.card.opacity(0.6), in: RoundedRectangle(cornerRadius: 28, style: .continuous))
+                            .overlay(RoundedRectangle(cornerRadius: 28, style: .continuous).stroke(Theme.grape.opacity(0.6), style: StrokeStyle(lineWidth: 2, dash: [8])))
                         }
                         .buttonStyle(.plain)
                     }
@@ -48,7 +51,7 @@ struct ChildPickerView: View {
             .screenBackground()
             .toolbar {
                 ToolbarItem(placement: .topBarTrailing) {
-                    Button { showAccount = true } label: { Image(systemName: "gearshape.fill") }
+                    Button { showAccount = true } label: { Image(systemName: "gearshape.fill") }.accessibilityLabel("Account")
                 }
             }
             .navigationDestination(item: $selected) { child in HomeView(childID: child.id) }
@@ -103,9 +106,14 @@ struct AddChildView: View {
                 Section("Pick a buddy") {
                     LazyVGrid(columns: [GridItem(.adaptive(minimum: 56))]) {
                         ForEach(Theme.avatars, id: \.self) { a in
-                            Text(a).font(.system(size: 40)).padding(6)
-                                .background(a == avatar ? Theme.sun.opacity(0.5) : .clear, in: Circle())
-                                .onTapGesture { avatar = a }
+                            Button { avatar = a } label: {
+                                Text(a).font(.system(size: 40)).padding(6)
+                                    .background(a == avatar ? Theme.sun.opacity(0.5) : .clear, in: Circle())
+                                    .overlay(Circle().stroke(a == avatar ? Theme.grape : .clear, lineWidth: 3))
+                            }
+                            .buttonStyle(.plain)
+                            .accessibilityLabel("Buddy \(a)")
+                            .accessibilityAddTraits(a == avatar ? .isSelected : [])
                         }
                     }
                 }

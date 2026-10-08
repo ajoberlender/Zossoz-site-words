@@ -50,9 +50,15 @@ struct ParentView: View {
             ScrollView(.horizontal, showsIndicators: false) {
                 HStack {
                     ForEach(Theme.avatars, id: \.self) { a in
-                        Text(a).font(.system(size: 34)).padding(6)
-                            .background(a == (store.child(c.id)?.avatar ?? c.avatar) ? Theme.sun.opacity(0.5) : .clear, in: Circle())
-                            .onTapGesture { if var n = store.child(c.id) { n.avatar = a; store.updateChild(n) } }
+                        let selected = a == (store.child(c.id)?.avatar ?? c.avatar)
+                        Button { if var n = store.child(c.id) { n.avatar = a; store.updateChild(n) } } label: {
+                            Text(a).font(.system(size: 34)).padding(6)
+                                .background(selected ? Theme.sun.opacity(0.5) : .clear, in: Circle())
+                                .overlay(Circle().stroke(selected ? Theme.grape : .clear, lineWidth: 3))
+                        }
+                        .buttonStyle(.plain)
+                        .accessibilityLabel("Buddy \(a)")
+                        .accessibilityAddTraits(selected ? .isSelected : [])
                     }
                 }
             }

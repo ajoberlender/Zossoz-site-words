@@ -25,30 +25,32 @@ struct BuildActivity: View {
                     Task { await SpeechService.shared.speakSoundedOut(item.text, child: child) }
                 } label: {
                     Image(systemName: "tortoise.fill").font(.title).frame(width: 96, height: 96)
-                        .background(Theme.sun, in: Circle()).foregroundStyle(Theme.ink)
+                        .background(Theme.sun, in: Circle()).foregroundStyle(Theme.onSun)
                 }
                 .accessibilityLabel("Sound it out")
             }
             HStack(spacing: 10) {
                 ForEach(0..<letters.count, id: \.self) { i in
                     Text(i < placed.count ? placed[i].letter : "")
-                        .font(Theme.big(52)).foregroundStyle(Theme.ink)
+                        .accessibilityLabel(i < placed.count ? placed[i].letter : "Empty slot \(i + 1)")
+                        .bigFont(52).foregroundStyle(Theme.ink)
                         .frame(width: 64, height: 80)
-                        .background(i < placed.count ? Theme.mint.opacity(0.35) : Color.white,
+                        .background(i < placed.count ? Theme.mint.opacity(0.35) : Theme.card,
                                     in: RoundedRectangle(cornerRadius: 16))
-                        .overlay(RoundedRectangle(cornerRadius: 16).stroke(Theme.grape.opacity(0.4), style: StrokeStyle(lineWidth: 3, dash: [6])))
+                        .overlay(RoundedRectangle(cornerRadius: 16).stroke(Theme.grape.opacity(0.8), style: StrokeStyle(lineWidth: 3, dash: [6])))
                 }
             }
             Spacer()
             FlowLayout(spacing: 12) {
                 ForEach(bank) { t in
                     Button { tap(t) } label: {
-                        Text(t.letter).font(Theme.big(48)).foregroundStyle(Theme.ink)
+                        Text(t.letter).bigFont(48).foregroundStyle(Theme.ink)
                             .frame(width: 76, height: 76)
-                            .background(.white, in: RoundedRectangle(cornerRadius: 20))
+                            .background(Theme.card, in: RoundedRectangle(cornerRadius: 20))
                             .shadow(color: .black.opacity(0.12), radius: 0, y: 4)
                     }
                     .buttonStyle(.plain)
+                    .accessibilityLabel(t.letter)
                 }
             }
             .frame(maxWidth: 420)

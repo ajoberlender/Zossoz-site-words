@@ -22,7 +22,7 @@ struct ListenPickActivity: View {
                 ForEach(choices) { c in
                     Button { tap(c) } label: {
                         Text(c.text)
-                            .font(Theme.big(c.text.count > 4 ? 48 : 64)).foregroundStyle(Theme.ink)
+                            .bigFont(c.text.count > 4 ? 48 : 64).foregroundStyle(Theme.ink)
                             .frame(maxWidth: .infinity, minHeight: 100)
                             .background(background(for: c), in: RoundedRectangle(cornerRadius: 26, style: .continuous))
                             .shadow(color: .black.opacity(0.1), radius: 0, y: 5)
@@ -44,7 +44,7 @@ struct ListenPickActivity: View {
 
     private func background(for c: Item) -> Color {
         if wrong.contains(c.key) { return Theme.coral.opacity(0.35) }
-        return .white
+        return Theme.card
     }
 
     private func play() async {
