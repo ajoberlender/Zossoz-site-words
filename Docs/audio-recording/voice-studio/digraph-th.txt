@@ -1,0 +1,8 @@
+# digraph-th: /θ/ as in thin
+# Say this: Tongue lightly between the teeth, blow air (no voice): “thhhhh”.
+# Don't say this: Not “t”. Not the voiced “th” of “this”.
+# Note: A bare consonant isn't allowed (every group needs a vowel), so this is consonant + short schwa. The sound should be held; if the 'uh' is audible, trim it in the editor.
+@gap 0
+@voice NARRATOR AJ
+
+[TH AH0]

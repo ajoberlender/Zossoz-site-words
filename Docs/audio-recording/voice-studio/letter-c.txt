@@ -1,0 +1,8 @@
+# letter-c: /k/ as in cat
+# Say this: The letter C makes the hard “k” sound here, as in “cat”: a quick “k”.
+# Don't say this: Not “see”. Not the soft c (“s”).
+# Note: A stop sound can't be bare, so this is consonant + short schwa. The clipped 'uh' is expected; keep it as short as possible.
+@gap 0
+@voice NARRATOR AJ
+
+[K AH0]

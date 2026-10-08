@@ -1,5 +1,7 @@
 # Recording the letter and digraph sounds
 
+> The `.md` files here are instructions for a **person** recording by hand. To generate the sounds with voice-studio, use the `.txt` scripts in [`voice-studio/`](voice-studio) instead, and see [`voice-studio-README.md`](voice-studio-README.md). Don't give these `.md` files to voice-studio; it would read them aloud.
+
 The app plays a short recording whenever it needs to say a letter or digraph sound (intro cards, “which
 letter makes this sound?”, “sound it out”, flashcards, and the “That's *sound*, like in *word*” feedback).
 Speech synthesis can't say a bare sound properly (it says “ess ess” for S), so these recordings are the real

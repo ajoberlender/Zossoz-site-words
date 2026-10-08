@@ -1,0 +1,8 @@
+# letter-p: /p/ as in penguin
+# Say this: A quick puff of air from closed lips: “p”. Keep any “uh” tiny.
+# Don't say this: Not “pee”. Not “puh” with a long vowel.
+# Note: A stop sound can't be bare, so this is consonant + short schwa. The clipped 'uh' is expected; keep it as short as possible.
+@gap 0
+@voice NARRATOR AJ
+
+[P AH0]

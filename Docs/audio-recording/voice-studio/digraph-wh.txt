@@ -1,0 +1,8 @@
+# digraph-wh: /w/ as in whale
+# Say this: Round the lips and open, as at the start of “whale”: “wh” (plain “w” is fine).
+# Don't say this: Not “double-you”.
+# Note: A stop sound can't be bare, so this is consonant + short schwa. The clipped 'uh' is expected; keep it as short as possible.
+@gap 0
+@voice NARRATOR AJ
+
+[W AH0]

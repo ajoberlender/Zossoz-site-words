@@ -1,0 +1,8 @@
+# letter-b: /b/ as in bear
+# Say this: A quick buzz of the lips: “b”. Keep any “uh” tiny.
+# Don't say this: Not “bee”. Not “buh” with a long vowel.
+# Note: A stop sound can't be bare, so this is consonant + short schwa. The clipped 'uh' is expected; keep it as short as possible.
+@gap 0
+@voice NARRATOR AJ
+
+[B AH0]

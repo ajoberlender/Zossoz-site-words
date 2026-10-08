@@ -1,0 +1,7 @@
+# letter-a: /æ/ as in apple
+# Say this: Short a, the first sound in “apple”: “aaaa” (mouth open, jaw dropped).
+# Don't say this: Not the letter name “ay”. Not “ah”.
+@gap 0
+@voice NARRATOR AJ
+
+[AE1]

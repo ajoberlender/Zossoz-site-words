@@ -1,0 +1,8 @@
+# letter-r: /r/ as in rainbow
+# Say this: A growly “rrrrr” with the tongue pulled back, lips slightly rounded.
+# Don't say this: Not the letter name “are”. Not “ruh” with a heavy vowel.
+# Note: A bare consonant isn't allowed (every group needs a vowel), so this is consonant + short schwa. The sound should be held; if the 'uh' is audible, trim it in the editor.
+@gap 0
+@voice NARRATOR AJ
+
+[R AH0]

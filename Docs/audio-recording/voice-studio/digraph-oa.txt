@@ -1,0 +1,7 @@
+# digraph-oa: /oʊ/ as in goat
+# Say this: Long o, as in “goat”: “ohhh”.
+# Don't say this: Not “aw”.
+@gap 0
+@voice NARRATOR AJ
+
+[OW1]

@@ -1,0 +1,8 @@
+# letter-q: /kw/ as in queen
+# Say this: Always two sounds together: “k” + “w”, as at the start of “queen”: “kw”.
+# Don't say this: Not “queue”, not “kwoo”, not “qww”. Keep any “uh” tiny.
+# Note: A stop sound can't be bare, so this is consonant + short schwa. The clipped 'uh' is expected; keep it as short as possible.
+@gap 0
+@voice NARRATOR AJ
+
+[K W AH0]

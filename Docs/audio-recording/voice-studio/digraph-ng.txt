@@ -1,0 +1,8 @@
+# digraph-ng: /ŋ/ as in ring
+# Say this: The hum at the end of “ring”: back of the tongue up, voice through the nose: “ngngng”.
+# Don't say this: Not “n” + “g”. Not the hard g.
+# Note: /ng/ can't start a group, so the vowel comes first. Cut the leading 'uh' in the editor, leaving the 'ng'.
+@gap 0
+@voice NARRATOR AJ
+
+[AH0 NG]

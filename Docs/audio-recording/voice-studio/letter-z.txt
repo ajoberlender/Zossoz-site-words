@@ -1,0 +1,8 @@
+# letter-z: /z/ as in zebra
+# Say this: A buzzing “zzzzz”, like a bee.
+# Don't say this: Not the letter name “zee”.
+# Note: A bare consonant isn't allowed (every group needs a vowel), so this is consonant + short schwa. The sound should be held; if the 'uh' is audible, trim it in the editor.
+@gap 0
+@voice NARRATOR AJ
+
+[Z AH0]

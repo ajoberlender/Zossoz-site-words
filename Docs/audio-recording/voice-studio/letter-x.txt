@@ -1,0 +1,8 @@
+# letter-x: /ks/ as in fox
+# Say this: The two sounds “k” + “s” run together, as at the end of “fox”: “ks”.
+# Don't say this: Not the letter name “ex”.
+# Note: A stop sound can't be bare, so this is consonant + short schwa. The clipped 'uh' is expected; keep it as short as possible.
+@gap 0
+@voice NARRATOR AJ
+
+[K S AH0]

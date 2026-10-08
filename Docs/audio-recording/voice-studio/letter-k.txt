@@ -1,0 +1,8 @@
+# letter-k: /k/ as in key
+# Say this: A quick “k” from the back of the throat, as at the start of “key”.
+# Don't say this: Not “koo”, not “kay”. Keep any “uh” tiny.
+# Note: A stop sound can't be bare, so this is consonant + short schwa. The clipped 'uh' is expected; keep it as short as possible.
+@gap 0
+@voice NARRATOR AJ
+
+[K AH0]

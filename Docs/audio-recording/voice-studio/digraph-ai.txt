@@ -1,0 +1,7 @@
+# digraph-ai: /eɪ/ as in train
+# Say this: Long a, as in “train”: “aaay”.
+# Don't say this: Not “eye”.
+@gap 0
+@voice NARRATOR AJ
+
+[EY1]

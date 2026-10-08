@@ -1,0 +1,7 @@
+# letter-u: /ʌ/ as in umbrella
+# Say this: Short u, as in “umbrella” or “cup”: “uh”.
+# Don't say this: Not the letter name “you”. Not “oo”.
+@gap 0
+@voice NARRATOR AJ
+
+[AH1]

@@ -1,0 +1,7 @@
+# digraph-ee: /i/ as in bee
+# Say this: Long e, as in “bee”: “eeeee”.
+# Don't say this: Not the letter name stretched (“ee” is the same, just clean and held).
+@gap 0
+@voice NARRATOR AJ
+
+[IY1]

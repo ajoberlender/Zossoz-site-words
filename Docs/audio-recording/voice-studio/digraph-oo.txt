@@ -1,0 +1,7 @@
+# digraph-oo: /u/ as in moon
+# Say this: The long “oo” of “moon”: “oooo”.
+# Don't say this: Not the short “oo” of “book”.
+@gap 0
+@voice NARRATOR AJ
+
+[UW1]

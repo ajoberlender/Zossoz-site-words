@@ -1,0 +1,7 @@
+# digraph-ar: /ɑr/ as in star
+# Say this: The sound in “star” and “car”: “arrr”.
+# Don't say this: Not “ay-are”.
+@gap 0
+@voice NARRATOR AJ
+
+[AA1 R]

@@ -1,0 +1,8 @@
+# digraph-qu: /kw/ as in queen
+# Say this: The same “kw” as the letter Q, as at the start of “queen”: “kw”.
+# Don't say this: Not “queue”. Not “kwoo”.
+# Note: A stop sound can't be bare, so this is consonant + short schwa. The clipped 'uh' is expected; keep it as short as possible.
+@gap 0
+@voice NARRATOR AJ
+
+[K W AH0]

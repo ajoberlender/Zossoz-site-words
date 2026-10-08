@@ -1,0 +1,8 @@
+# letter-v: /v/ as in violin
+# Say this: Top teeth on the bottom lip with voice, a buzz: “vvvvv”.
+# Don't say this: Not the letter name “vee”.
+# Note: A bare consonant isn't allowed (every group needs a vowel), so this is consonant + short schwa. The sound should be held; if the 'uh' is audible, trim it in the editor.
+@gap 0
+@voice NARRATOR AJ
+
+[V AH0]

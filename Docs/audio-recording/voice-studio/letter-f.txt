@@ -1,0 +1,8 @@
+# letter-f: /f/ as in fish
+# Say this: Top teeth on the bottom lip, steady air: “fffff”.
+# Don't say this: Not the letter name “eff”.
+# Note: A bare consonant isn't allowed (every group needs a vowel), so this is consonant + short schwa. The sound should be held; if the 'uh' is audible, trim it in the editor.
+@gap 0
+@voice NARRATOR AJ
+
+[F AH0]

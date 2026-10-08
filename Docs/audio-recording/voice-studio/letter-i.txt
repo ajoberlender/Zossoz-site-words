@@ -1,0 +1,7 @@
+# letter-i: /ɪ/ as in iguana
+# Say this: Short i, like the start of “it” or “igloo”: “ih”.
+# Don't say this: Not the letter name “eye”. Not “ee”.
+@gap 0
+@voice NARRATOR AJ
+
+[IH1]

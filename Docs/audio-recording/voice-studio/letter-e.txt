@@ -1,0 +1,7 @@
+# letter-e: /ɛ/ as in egg
+# Say this: Short e, as in “egg” or “bed”: “eh”.
+# Don't say this: Not the letter name “ee”.
+@gap 0
+@voice NARRATOR AJ
+
+[EH1]

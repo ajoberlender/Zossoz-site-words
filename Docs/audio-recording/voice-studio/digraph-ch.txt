@@ -1,0 +1,8 @@
+# digraph-ch: /tʃ/ as in chip
+# Say this: The sound at the start of “chip”, like a sneeze: a quick “ch”.
+# Don't say this: Not “kuh”. Not “sh”.
+# Note: A stop sound can't be bare, so this is consonant + short schwa. The clipped 'uh' is expected; keep it as short as possible.
+@gap 0
+@voice NARRATOR AJ
+
+[CH AH0]

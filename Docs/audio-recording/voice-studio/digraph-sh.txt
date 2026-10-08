@@ -1,0 +1,8 @@
+# digraph-sh: /ʃ/ as in ship
+# Say this: The “be quiet” sound: “shhhhh”.
+# Don't say this: Not “s” + “h” separately.
+# Note: A bare consonant isn't allowed (every group needs a vowel), so this is consonant + short schwa. The sound should be held; if the 'uh' is audible, trim it in the editor.
+@gap 0
+@voice NARRATOR AJ
+
+[SH AH0]
