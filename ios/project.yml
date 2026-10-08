@@ -14,7 +14,13 @@ targets:
     type: application
     platform: iOS
     sources:
-      - SightWords
+      - path: SightWords
+        excludes:
+          - Resources/Sounds
+      # Copied into the app as a folder (Sounds/letter-a.wav, ...) so every recorded clip is bundled as-is.
+      - path: SightWords/Resources/Sounds
+        type: folder
+        buildPhase: resources
     info:
       path: SightWords/Resources/Info.plist
       properties:

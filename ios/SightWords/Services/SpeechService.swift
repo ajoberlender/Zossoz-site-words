@@ -124,11 +124,19 @@ final class SpeechService: NSObject, ObservableObject, AVSpeechSynthesizerDelega
     private func playClip(named name: String) async -> Bool {
         // Recordings dropped into Resources/Sounds can be any of these; anything but .m4a wins over the
         // bundled placeholder clips, so real recordings take over without deleting the old files.
-        let url = ["wav", "mp3", "caf", "aac", "m4a"].lazy.compactMap { ext in
-            Bundle.main.url(forResource: name, withExtension: ext)
-                ?? Bundle.main.url(forResource: name, withExtension: ext, subdirectory: "Sounds")
-        }.first
-        guard let url, let p = try? AVAudioPlayer(contentsOf: url) else { return false }
+        // A clip that exists but won't decode is skipped, so a bad .wav still falls through to the .m4a.
+        var found: AVAudioPlayer?
+        for ext in ["wav", "mp3", "caf", "aac", "m4a"] {
+            let url = Bundle.main.url(forResource: name, withExtension: ext, subdirectory: "Sounds")
+                ?? Bundle.main.url(forResource: name, withExtension: ext)
+            guard let url else { continue }
+            do { found = try AVAudioPlayer(contentsOf: url); break }
+            catch { NSLog("SpeechService: can't decode \(url.lastPathComponent): \(error)") }
+        }
+        guard let p = found else {
+            NSLog("SpeechService: no playable clip named \(name) in the app bundle")
+            return false
+        }
         stop()
         p.delegate = self
         p.prepareToPlay()
