@@ -7,6 +7,7 @@ struct HomeView: View {
     @State private var showStories = false
     @State private var showGate = false
     @State private var showParent = false
+    @State private var gatePassed = false
 
     private var child: Child? { store.child(childID) }
 
@@ -30,7 +31,9 @@ struct HomeView: View {
             .navigationBarTitleDisplayMode(.inline)
             .fullScreenCover(isPresented: $playing) { SessionView(childID: childID) }
             .fullScreenCover(isPresented: $showStories) { StoriesView(childID: childID) }
-            .sheet(isPresented: $showGate) { GrownUpGate { showParent = true } }
+            .sheet(isPresented: $showGate, onDismiss: {
+                if gatePassed { gatePassed = false; showParent = true }
+            }) { GrownUpGate { gatePassed = true } }
             .sheet(isPresented: $showParent) { ParentView(childID: childID) }
         } else {
             ContentUnavailableView("Reader not found", systemImage: "person.slash")

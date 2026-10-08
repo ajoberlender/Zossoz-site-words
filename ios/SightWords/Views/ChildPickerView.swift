@@ -7,6 +7,7 @@ struct ChildPickerView: View {
     @State private var showAdd = false
     @State private var showGate = false
     @State private var showAccount = false
+    @State private var gatePassed = false
 
     var body: some View {
         NavigationStack {
@@ -51,8 +52,10 @@ struct ChildPickerView: View {
                 }
             }
             .navigationDestination(item: $selected) { child in HomeView(childID: child.id) }
-            .sheet(isPresented: $showGate) {
-                GrownUpGate { showAdd = true }
+            .sheet(isPresented: $showGate, onDismiss: {
+                if gatePassed { gatePassed = false; showAdd = true }
+            }) {
+                GrownUpGate { gatePassed = true }
             }
             .sheet(isPresented: $showAdd) { AddChildView() }
             .sheet(isPresented: $showAccount) { AccountGateSheet() }
@@ -82,7 +85,7 @@ private struct AccountGateSheet: View {
                 .toolbar { ToolbarItem(placement: .confirmationAction) { Button("Done") { dismiss() } } }
             }
         } else {
-            GrownUpGate { passed = true }
+            GrownUpGate(dismissOnPass: false) { passed = true }
         }
     }
 }

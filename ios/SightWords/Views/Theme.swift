@@ -87,6 +87,7 @@ extension View {
 
 /// Simple "ask a grown-up" gate (multiplication) in front of settings and account actions.
 struct GrownUpGate: View {
+    var dismissOnPass = true
     var onPass: () -> Void
     @Environment(\.dismiss) private var dismiss
     @State private var a = Int.random(in: 6...9)
@@ -108,7 +109,7 @@ struct GrownUpGate: View {
             HStack {
                 Button("Cancel") { dismiss() }.buttonStyle(.bordered)
                 Button("Continue") {
-                    if Int(answer) == a * b { dismiss(); onPass() }
+                    if Int(answer) == a * b { onPass(); if dismissOnPass { dismiss() } }
                     else { wrong = true; answer = ""; a = Int.random(in: 6...9); b = Int.random(in: 6...9) }
                 }
                 .buttonStyle(.borderedProminent)

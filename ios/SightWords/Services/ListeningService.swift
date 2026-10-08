@@ -34,7 +34,7 @@ final class ListeningService: ObservableObject {
     func listen(expecting words: [String], maxSeconds: Double = 6) async -> String {
         guard isAvailable, !isListening else { return "" }
         SpeechService.shared.stop()
-        SpeechService.shared.configureSession(record: true)
+        await SpeechService.shared.configureSessionAndWait(record: true)
         transcript = ""
 
         let req = SFSpeechAudioBufferRecognitionRequest()

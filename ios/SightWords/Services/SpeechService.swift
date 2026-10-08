@@ -19,11 +19,26 @@ final class SpeechService: NSObject, ObservableObject, AVSpeechSynthesizerDelega
         configureSession(record: false)
     }
 
-    func configureSession(record: Bool) {
+    /// AVAudioSession calls can block, so they run on a serial background queue (in call order).
+    private static let sessionQueue = DispatchQueue(label: "SpeechService.audioSession")
+
+    private nonisolated static func applySession(record: Bool) {
         let s = AVAudioSession.sharedInstance()
         try? s.setCategory(record ? .playAndRecord : .playback, mode: record ? .measurement : .spokenAudio,
                            options: record ? [.defaultToSpeaker, .duckOthers] : [.duckOthers])
         try? s.setActive(true)
+    }
+
+    /// Fire-and-forget; returns immediately.
+    func configureSession(record: Bool) {
+        Self.sessionQueue.async { Self.applySession(record: record) }
+    }
+
+    /// Returns once the session is configured (use before starting the audio engine).
+    func configureSessionAndWait(record: Bool) async {
+        await withCheckedContinuation { (c: CheckedContinuation<Void, Never>) in
+            Self.sessionQueue.async { Self.applySession(record: record); c.resume() }
+        }
     }
 
     static func availableVoices() -> [AVSpeechSynthesisVoice] {
@@ -32,27 +47,36 @@ final class SpeechService: NSObject, ObservableObject, AVSpeechSynthesizerDelega
             .sorted { ($0.quality.rawValue, $0.name) > ($1.quality.rawValue, $1.name) }
     }
 
-    /// Prefer an enhanced/premium en-US voice when the child hasn't picked one.
+    /// Samantha (the classic en-US system voice) unless the child picked another; falls back to the best en-US voice.
     static func defaultVoice() -> AVSpeechSynthesisVoice? {
         let us = availableVoices().filter { $0.language == "en-US" }
-        return us.first { $0.quality == .premium } ?? us.first { $0.quality == .enhanced } ?? us.first
+        return us.first { $0.name == "Samantha" && $0.quality != .default }
+            ?? us.first { $0.name == "Samantha" }
+            ?? us.first { $0.quality == .premium } ?? us.first { $0.quality == .enhanced } ?? us.first
             ?? AVSpeechSynthesisVoice(language: "en-US")
     }
 
     /// Speak ordinary text. Returns when finished (or interrupted).
-    @discardableResult
-    func speak(_ text: String, child: Child?, rate: Double? = nil) async -> Void {
+    func speak(_ text: String, child: Child?, rate: Double? = nil) async {
         await speak(utteranceFor: AVSpeechUtterance(string: text), child: child, rate: rate)
     }
 
-    /// Speak a letter/digraph sound. Uses IPA when the voice supports it, else the respelling ("sss").
-    func speakSound(_ item: Item, child: Child?) async {
-        let attr = NSMutableAttributedString(string: item.say)
-        if let ipa = Self.ipa[item.text] {
-            attr.addAttribute(NSAttributedString.Key(AVSpeechSynthesisIPANotationAttribute), value: ipa,
-                              range: NSRange(location: 0, length: attr.length))
-        }
-        await speak(utteranceFor: AVSpeechUtterance(attributedString: attr), child: child, rate: 0.38)
+    /// Speak a letter/digraph sound. IPA is deliberately not used: most voices (especially the
+    /// enhanced/premium ones a parent picks) ignore or mangle it, which both clipped the sound and
+    /// ignored the chosen voice. Instead we speak a drawn-out plain-text respelling, then an anchor word.
+    func speakSound(_ item: Item, child: Child?, withExample: Bool = true) async {
+        let spoken = Self.stretched[item.text] ?? item.say
+        let rate = min(child?.speechRate ?? 0.42, 0.40)
+        await speak(utteranceFor: AVSpeechUtterance(string: spoken + "…"), child: child, rate: rate)
+        guard withExample, !Task.isCancelled, let word = Self.exampleWord(for: item) else { return }
+        try? await Task.sleep(nanoseconds: 250_000_000)
+        if Task.isCancelled { return }
+        await speak(word, child: child, rate: rate)
+    }
+
+    private static func exampleWord(for item: Item) -> String? {
+        if item.kind == .digraph { return item.hint?.replacingOccurrences(of: "as in ", with: "") }
+        return exampleWords[item.text]
     }
 
     /// "s … a … t … sat": slow sound-by-sound, then the whole word.
@@ -60,7 +84,7 @@ final class SpeechService: NSObject, ObservableObject, AVSpeechSynthesizerDelega
         for ch in word.lowercased() {
             let key = String(ch)
             guard let sound = Curriculum.byKey["letter:\(key)"] else { continue }
-            await speakSound(sound, child: child)
+            await speakSound(sound, child: child, withExample: false)
             try? await Task.sleep(nanoseconds: 120_000_000)
             if Task.isCancelled { return }
         }
@@ -105,11 +129,16 @@ final class SpeechService: NSObject, ObservableObject, AVSpeechSynthesizerDelega
         Task { @MainActor in self.finish() }
     }
 
-    private static let ipa: [String: String] = [
-        "s": "s", "a": "æ", "t": "t", "p": "p", "i": "ɪ", "n": "n", "m": "m", "d": "d", "o": "ɑ", "g": "g",
-        "c": "k", "k": "k", "e": "ɛ", "u": "ʌ", "r": "ɹ", "h": "h", "b": "b", "f": "f", "l": "l", "j": "dʒ",
-        "v": "v", "w": "w", "x": "ks", "y": "j", "z": "z", "q": "kw",
-        "sh": "ʃ", "ch": "tʃ", "th": "θ", "wh": "w", "ck": "k", "ng": "ŋ", "qu": "kw",
-        "ee": "i", "ai": "eɪ", "oa": "oʊ", "oo": "u", "ar": "ɑɹ",
+    /// Continuous sounds are held longer so they're audible; stop sounds keep the short "uh" form.
+    private static let stretched: [String: String] = [
+        "s": "sssss", "n": "nnnnn", "m": "mmmmm", "r": "rrrrr", "f": "fffff", "l": "lllll", "v": "vvvvv",
+        "z": "zzzzz", "sh": "shhhhh", "th": "thhhhh", "ng": "nnggg", "ee": "eeeee", "oo": "oooo",
+    ]
+
+    private static let exampleWords: [String: String] = [
+        "s": "snake", "a": "apple", "t": "tiger", "p": "penguin", "i": "iguana", "n": "nose", "m": "moon",
+        "d": "dog", "o": "octopus", "g": "goat", "c": "cat", "k": "key", "e": "egg", "u": "umbrella",
+        "r": "rainbow", "h": "hat", "b": "bear", "f": "fish", "l": "lion", "j": "juice", "v": "violin",
+        "w": "whale", "x": "fox", "y": "yo-yo", "z": "zebra", "q": "queen",
     ]
 }

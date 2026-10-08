@@ -81,4 +81,21 @@ struct LocalSnapshot: Codable {
     var deletedCustomWordServerIDs: [Int] = []
     var deletedChildServerIDs: [Int] = []
     var stories: [GeneratedStory] = []
+    /// Permanent local activity log (pendingReviews is cleared after sync) — powers parent analytics.
+    var history: [ReviewEvent] = []
+
+    init() {}
+
+    init(from decoder: Decoder) throws {
+        let c = try decoder.container(keyedBy: CodingKeys.self)
+        children = try c.decodeIfPresent([Child].self, forKey: .children) ?? []
+        progress = try c.decodeIfPresent([ProgressRecord].self, forKey: .progress) ?? []
+        pendingReviews = try c.decodeIfPresent([ReviewEvent].self, forKey: .pendingReviews) ?? []
+        pendingAttempts = try c.decodeIfPresent([PassageAttempt].self, forKey: .pendingAttempts) ?? []
+        customWords = try c.decodeIfPresent([CustomWord].self, forKey: .customWords) ?? []
+        deletedCustomWordServerIDs = try c.decodeIfPresent([Int].self, forKey: .deletedCustomWordServerIDs) ?? []
+        deletedChildServerIDs = try c.decodeIfPresent([Int].self, forKey: .deletedChildServerIDs) ?? []
+        stories = try c.decodeIfPresent([GeneratedStory].self, forKey: .stories) ?? []
+        history = try c.decodeIfPresent([ReviewEvent].self, forKey: .history) ?? []
+    }
 }

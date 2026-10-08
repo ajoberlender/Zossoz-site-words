@@ -59,6 +59,7 @@ final class AppStore: ObservableObject {
             s.children.removeAll { $0.id == id }
             s.progress.removeAll { $0.childID == id }
             s.pendingReviews.removeAll { $0.childID == id }
+            s.history.removeAll { $0.childID == id }
             s.pendingAttempts.removeAll { $0.childID == id }
             s.customWords.removeAll { $0.childID == id }
             s.stories.removeAll { $0.childID == id }
@@ -89,11 +90,16 @@ final class AppStore: ObservableObject {
                                                                      itemType: item.kind.rawValue, stage: item.stage)
             let next = SRS.review(prev, grade: grade)
             if let idx { s.progress[idx] = next } else { s.progress.append(next) }
-            s.pendingReviews.append(ReviewEvent(childID: childID, itemKey: item.key, activity: activity,
-                                                grade: grade.rawValue, responseMs: responseMs,
-                                                heardAudio: heardAudio, aiFeedback: aiFeedback))
+            let event = ReviewEvent(childID: childID, itemKey: item.key, activity: activity,
+                                    grade: grade.rawValue, responseMs: responseMs,
+                                    heardAudio: heardAudio, aiFeedback: aiFeedback)
+            s.pendingReviews.append(event)
+            s.history.append(event)
+            if s.history.count > 20_000 { s.history.removeFirst(s.history.count - 20_000) }
         }
     }
+
+    func history(for childID: UUID) -> [ReviewEvent] { snap.history.filter { $0.childID == childID } }
 
     func recordAttempt(_ a: PassageAttempt) { mutate { $0.pendingAttempts.append(a) } }
 

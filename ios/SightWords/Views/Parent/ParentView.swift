@@ -18,6 +18,8 @@ struct ParentView: View {
         NavigationStack {
             if let child = store.child(childID) {
                 Form {
+                    profileSection(child)
+                    UsageSection(childID: childID)
                     progressSection(child)
                     troubleSection()
                     learnerSection(child)
@@ -29,7 +31,7 @@ struct ParentView: View {
                 }
                 .navigationTitle(child.name)
                 .navigationBarTitleDisplayMode(.inline)
-                .toolbar { ToolbarItem(placement: .confirmationAction) { Button("Done") { dismiss() } } }
+                .toolbar { ToolbarItem(placement: .confirmationAction) { Button("Done") { trimName(childID); dismiss() } } }
                 .confirmationDialog("Delete \(child.name) and all progress?", isPresented: $confirmDelete, titleVisibility: .visible) {
                     Button("Delete", role: .destructive) { store.deleteChild(childID); dismiss() }
                 }
@@ -38,6 +40,31 @@ struct ParentView: View {
     }
 
     // MARK: Sections
+
+    private func profileSection(_ c: Child) -> some View {
+        Section("Reader") {
+            TextField("Name", text: Binding(
+                get: { store.child(c.id)?.name ?? c.name },
+                set: { v in if var n = store.child(c.id) { n.name = v; store.updateChild(n) } }))
+                .onSubmit { trimName(c.id) }
+            ScrollView(.horizontal, showsIndicators: false) {
+                HStack {
+                    ForEach(Theme.avatars, id: \.self) { a in
+                        Text(a).font(.system(size: 34)).padding(6)
+                            .background(a == (store.child(c.id)?.avatar ?? c.avatar) ? Theme.sun.opacity(0.5) : .clear, in: Circle())
+                            .onTapGesture { if var n = store.child(c.id) { n.avatar = a; store.updateChild(n) } }
+                    }
+                }
+            }
+        }
+    }
+
+    private func trimName(_ id: UUID) {
+        guard var n = store.child(id) else { return }
+        let t = n.name.trimmingCharacters(in: .whitespaces)
+        n.name = t.isEmpty ? "Reader" : t
+        store.updateChild(n)
+    }
 
     private func progressSection(_ c: Child) -> some View {
         Section("Progress") {
